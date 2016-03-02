@@ -1,0 +1,227 @@
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+.btn-default,
+.btn-default:hover,
+.btn-default:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  font-family: 'Raleway', sans-serif;
+}
+
+/* Extra markup and styles for table-esque vertical and horizontal centering */
+.site-wrapper {
+  /*background-image: url(../images/background_home2.jpg);*/
+  background-size: cover;
+  display: table;
+  width: 100%;
+  height: 100%; /* For at least Firefox */
+  min-height: 100%;
+  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+}
+.site-wrapper-inner {
+  display: table-cell;
+  vertical-align: top;
+
+}
+.cover-container {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Padding for spacing */
+.inner {
+  padding: 30px;
+}
+
+.img-circle {
+  width: 100px;
+  padding: 10px;
+  border-radius: 0px;
+  /*background-color: #16a085;*/
+  /*border: 3px solid  #fff; */
+  /*margin-top: 20px;*/
+  /*margin-bottom: 50px;*/
+/*    -webkit-box-shadow:3px 3px 3px rgba(0,0,0,.5);
+          box-shadow:3px 3px 3px rgba(0,0,0,.5);*/
+}
+
+.img-circle:hover{
+
+/*  background-color:  #34495e;*/
+/*  border: 3px solid  #16a085; */
+/*    -webkit-box-shadow:3px 3px 3px rgba(0,0,0,.5);
+          box-shadow:3px 3px 3px rgba(0,0,0,.5);*/
+}
+
+/*
+ * Header
+ */
+
+.masthead-brand {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.masthead-nav > li {
+  display: inline-block;
+}
+.masthead-nav > li + li {
+  margin-left: 10px;
+}
+.masthead-nav > li > a {
+  padding-right: 10px;
+  padding-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff; /* IE8 proofing */
+  color: rgba(255,255,255,.75);
+  border-right: 3px solid transparent;
+  text-transform: uppercase;
+  /*font-family: 'Montserrat', sans-serif;*/
+  letter-spacing: -0.05em;
+  padding-bottom: 5px;
+}
+.masthead-nav > li > a:hover,
+.masthead-nav > li > a:focus {
+  background-color: transparent;
+  border-right-color: #a9a9a9;
+  border-right-color: rgba(255,255,255,.25);
+}
+.masthead-nav > .active > a,
+.masthead-nav > .active > a:hover,
+.masthead-nav > .active > a:focus {
+  color: #fff;
+  border-right-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .masthead-brand {
+    float: left;
+  }
+
+  .img-circle {
+    width: 120px;
+  }
+
+  .masthead-nav {
+    float: right;
+  }
+}
+
+
+/*
+ * Cover
+ */
+
+.cover {
+  padding: 0 20px;
+  width: 100%;
+
+}
+.cover .btn-lg {
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+
+/*
+ * Footer
+ */
+
+.mastfoot {
+  color: #999; /* IE8 proofing */
+  color: rgba(255,255,255,.5);
+}
+
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+  /* Pull out the header and footer */
+  .masthead {
+    position: fixed;
+    top: 0;
+  }
+  .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
+  /* Start the vertical centering */
+  .site-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
+}
+
+@media (min-width: 992px) {
+  .masthead,
+  .mastfoot,
+  .cover-container {
+    width: 700px;
+  }
+
+  .img-circle {
+    width: 100%;
+  }
+}
+
+.btn-custom {
+  color: #fff;
+  border-radius: 0px;
+  border-width: 2px;
+/*  background-color: #337ab7;*/
+  border-color: #fff;
+  text-transform: uppercase;
+}
+.btn-custom:focus,
+.btn-custom.focus {
+  color: #fff;
+/*  background-color: #286090;*/
+  border-color: #fff;
+}
+.btn-custom:hover {
+  color: #000;
+  background-color: #fff;
+  border-color: #fff;
+}
+.btn-custom:active,
+.btn-custom.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #fff;
+/*  background-color: #286090;*/
+  border-color: #fff;
+}
