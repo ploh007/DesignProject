@@ -33,8 +33,8 @@ void setup(){
   //Before communication starts, the Chip Select pin needs to be set high.
   digitalWrite(CS, HIGH);
   
-  //Put the ADXL345 into +/- 4G range by writing the value 0x01 to the DATA_FORMAT register.
-  writeRegister(DATA_FORMAT, 0x01);
+  //Put the ADXL345 into +/- 16G range by writing the value 0x01 to the DATA_FORMAT register.
+  writeRegister(DATA_FORMAT, 0x02);
   //Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
   writeRegister(POWER_CTL, 0x08);  //Measurement mode  
 }
