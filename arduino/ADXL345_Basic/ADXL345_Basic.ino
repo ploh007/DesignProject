@@ -16,7 +16,7 @@ char DATAZ0 = 0x36;	//Z-Axis Data 0
 char DATAZ1 = 0x37;	//Z-Axis Data 1
 
 //This buffer will hold values read from the ADXL345 registers.
-char values[10];
+unsigned char values[10];
 //These variables will be used to hold the x,y and z axis accelerometer values.
 int x,y,z;
 
@@ -59,7 +59,7 @@ void loop(){
   Serial.print(',');
   Serial.println(z, DEC); 
   
-  delay(100); 
+  delay(20); 
 }
 
 //This function will write a value to a register on the ADXL345.
@@ -82,7 +82,7 @@ void writeRegister(char registerAddress, char value){
 //  char registerAddress - The register addresse to start the read sequence from.
 //  int numBytes - The number of registers that should be read.
 //  char * values - A pointer to a buffer where the results of the operation should be stored.
-void readRegister(char registerAddress, int numBytes, char * values){
+void readRegister(char registerAddress, int numBytes, unsigned char * values){
   //Since we're performing a read operation, the most significant bit of the register address should be set.
   char address = 0x80 | registerAddress;
   //If we're doing a multi-byte read, bit 6 needs to be set as well.
