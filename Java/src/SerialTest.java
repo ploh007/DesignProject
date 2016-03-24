@@ -12,24 +12,25 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-public class SerialTest implements SerialPortEventListener {
-	SerialPort serialPort;
+public class SerialTest implements SerialPortEventListener, Runnable {
+	
+	private SerialPort serialPort;
+	
 	private static final String PORT_NAMES[] = { 
 			"COM7", // Windows
+			"/dev/ttyUSB0",  // Linux
 	};
 
 	private BufferedReader input;
-	private OutputStream output;
+	
 	private static final int TIME_OUT = 2000;
 	private static final int DATA_RATE = 9600;
-	
-	Fft fftObj = new Fft(64);
-//	Comparator compObj = new Comparator();
+
 
 	public void initialize() {
 
 		CommPortIdentifier portId = null;
-		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 		
 		while (portEnum.hasMoreElements()) {
 			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
@@ -40,23 +41,19 @@ public class SerialTest implements SerialPortEventListener {
 				}
 			}
 		}
+		
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
 			return;
 		}
 
 		try {
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
-					TIME_OUT);
+			serialPort = (SerialPort) portId.open(this.getClass().getName(), TIME_OUT);
 
 			// set port parameters
-			serialPort.setSerialPortParams(DATA_RATE,
-					SerialPort.DATABITS_8,
-					SerialPort.STOPBITS_1,
-					SerialPort.PARITY_NONE);
+			serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
 			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-			output = serialPort.getOutputStream();
 
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
@@ -77,39 +74,17 @@ public class SerialTest implements SerialPortEventListener {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine=input.readLine();
-				try {
-					// Store Data to a output file when new data is available from serial device
-					File file = new File("C:\\wamp\\www\\DesignProject\\filename.txt");
-					if (!file.exists()) {
-						file.createNewFile();
-					}
-					FileWriter fw = new FileWriter(file.getAbsoluteFile());
-					BufferedWriter bw = new BufferedWriter(fw);
-					
-					
-					
-					bw.write(inputLine);
-					bw.close();
 
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
+				System.out.println(inputLine);		
 				
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
 		}
 	}
-
-	public static void main(String[] args) throws Exception {
-		SerialTest main = new SerialTest();
-		main.initialize();
-		Thread t=new Thread() {
-			public void run() {
-				try {Thread.sleep(1000000);} catch (InterruptedException ie) {}
-			}
-		};
-		t.start();
+	
+	public void run() {
+		initialize();
+		System.out.println("Initialized serial port reader!");
 	}
 }
