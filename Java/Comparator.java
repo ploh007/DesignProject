@@ -10,13 +10,13 @@ public class Comparator {
     this.threshold = threshold;
     sampleDatabase = new LinkedList<Sample>();
 
-    try(FileReader fr = new FileReader("samples.json");
+    try(FileReader fr = new FileReader("samples.fft");
         BufferedReader br = new BufferedReader(fr);) {
 
       String line;
 
       while((line = br.readLine()) != null) {
-        
+
         String [] rawSample = line.split(":");
         String gesture = rawSample[0];
 
@@ -32,9 +32,9 @@ public class Comparator {
         System.out.println("Added new sample: " + sample.getGesture());
       }
     }catch(FileNotFoundException e){
-      System.out.println("Encountered a FileNotFoundException while reading json file.");
+      System.out.println("Encountered a FileNotFoundException while reading fft file.");
     }catch(IOException e) {
-      System.out.println("Encountered an IOException while reading json file.");
+      System.out.println("Encountered an IOException while reading fft file.");
     }
   }
 
