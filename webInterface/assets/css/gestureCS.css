@@ -159,12 +159,6 @@ svg {
     font-size: 14px;
 }
 
-.custom-btn {
-    background-color: #c0392b;
-    color: #fff;
-    border-color: #fff;
-}
-
 /* Hardware Heading COmponents */
 .hardware-heading {
     width: 280px;
@@ -204,6 +198,12 @@ svg {
 
 .hardware-heading:hover:before {
     top: 0;
+}
+
+.custom-btn {
+    background-color: #c0392b;
+    color: #fff;
+    border-color: #fff;
 }
 
 /* Responsive UI Controls */
