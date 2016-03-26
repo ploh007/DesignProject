@@ -1,13 +1,7 @@
-class Fft {
+public final class Fft {
 
-  private int sampleSize;
-
-  public Fft(int sampleSize) {
-    this.sampleSize = sampleSize;
-  }
-
-  public double [] fft(double [] samples) {
-    double [][] complexFft = complexFft(samples, sampleSize, 1, 0);
+  public static double [] fft(double [] samples) {
+    double [][] complexFft = complexFft(samples, samples.length, 1, 0);
     double [] fftMagnitudes = new double[complexFft.length];
 
     for(int i=0;i<samples.length;i++) {
@@ -17,7 +11,7 @@ class Fft {
     return fftMagnitudes;
   }
 
-  public double [][] complexFft(double [] x, int n, int s, int start)
+  private static double [][] complexFft(double [] x, int n, int s, int start)
   {
     double [][] result;
 

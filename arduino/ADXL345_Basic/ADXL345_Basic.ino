@@ -20,23 +20,37 @@ unsigned char values[10];
 //These variables will be used to hold the x,y and z axis accelerometer values.
 int x,y,z;
 
-void setup(){ 
+
+float dataBuffer [3][64];
+int bufferHead = 0;
+
+int BUFFER_SIZE = 64;
+int THRESHOLD = 100;
+
+int WAITING = 0;
+int CAPTURING = 0;
+
+int state = 0;
+int counter = 0;
+
+
+void setup(){
   //Initiate an SPI communication instance.
   SPI.begin();
   //Configure the SPI connection for the ADXL345.
   SPI.setDataMode(SPI_MODE3);
   //Create a serial connection to display the data on the terminal.
   Serial.begin(9600);
-  
+
   //Set up the Chip Select pin to be an output from the Arduino.
   pinMode(CS, OUTPUT);
   //Before communication starts, the Chip Select pin needs to be set high.
   digitalWrite(CS, HIGH);
-  
+
   //Put the ADXL345 into +/- 16G range by writing the value 0x01 to the DATA_FORMAT register.
   writeRegister(DATA_FORMAT, 0x02);
   //Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
-  writeRegister(POWER_CTL, 0x08);  //Measurement mode  
+  writeRegister(POWER_CTL, 0x08);  //Measurement mode
 }
 
 void loop(){
@@ -51,15 +65,90 @@ void loop(){
   y = ((int)values[3]<<8)|(int)values[2];
   //The Z value is stored in values[4] and values[5].
   z = ((int)values[5]<<8)|(int)values[4];
+
+  dataBuffer[0][bufferHead] = x;
+  dataBuffer[1][bufferHead] = y;
+  dataBuffer[2][bufferHead] = x;
   
-  //Print the results to the terminal.
-  Serial.print(x, DEC);
-  Serial.print(',');
-  Serial.print(y, DEC);
-  Serial.print(',');
-  Serial.println(z, DEC); 
+
+  float jerkMagnitude = getJerkMagnitude();
+  Serial.println(jerkMagnitude);
+/*
+  if(state == WAITING && jerkMagnitude > THRESHOLD) {
+    state = CAPTURING;
+    counter = 31;
+  }else if(state == CAPTURING) {
+    if(counter <= 0) {
+      state = WAITING;
+      Serial.println(getDataString());
+    }
+  }*/
   
-  delay(20); 
+  updateBufferHead();
+  
+  delay(20);
+}
+
+void updateBufferHead() {
+  bufferHead = (bufferHead++) % BUFFER_SIZE;
+}
+
+
+//compute jerk vector
+float* getJerkVector() {
+  
+  float jerkVector[3];
+  
+  for(int i=0;i<3;i++) {
+    
+    int previousBufferHead = bufferHead-1;
+    if(previousBufferHead < 0) {
+      previousBufferHead += BUFFER_SIZE;
+    }
+    
+    jerkVector[i] = (dataBuffer[i][bufferHead] - dataBuffer[i][previousBufferHead]);
+  }
+  
+  return jerkVector;
+}
+
+//computes jerk magnitude
+float getJerkMagnitude() {
+  
+  float* jerkVector = getJerkVector();
+  
+  float jerkMagnitude = 0;
+  
+  for(int i=0;i<3;i++) {
+    jerkMagnitude += sq(jerkVector[i]);
+  }
+  
+  jerkMagnitude = sqrt(jerkMagnitude);
+  
+  return jerkMagnitude;
+}
+
+
+String getDataString() {
+  
+  String dataString = "";
+  
+  for(int i=0;i<3;i++) {
+    for(int j=0;j<BUFFER_SIZE;j++)
+    {
+      int bufferIndex = j;
+      if(bufferIndex < 0) {
+        bufferIndex += BUFFER_SIZE;
+      }
+      
+      float* jerkVector = getJerkVector();
+      
+      dataString += String(dataBuffer[i][bufferIndex]) + ",";
+      dataString += ":" + String(jerkVector[0]) + "," + String(jerkVector[0]) + "," + String(jerkVector[0]);
+    }
+  }
+  
+  return dataString;
 }
 
 //This function will write a value to a register on the ADXL345.
@@ -87,7 +176,7 @@ void readRegister(char registerAddress, int numBytes, unsigned char * values){
   char address = 0x80 | registerAddress;
   //If we're doing a multi-byte read, bit 6 needs to be set as well.
   if(numBytes > 1)address = address | 0x40;
-  
+
   //Set the Chip select pin low to start an SPI packet.
   digitalWrite(CS, LOW);
   //Transfer the starting register address that needs to be read.
@@ -99,4 +188,3 @@ void readRegister(char registerAddress, int numBytes, unsigned char * values){
   //Set the Chips Select pin high to end the SPI packet.
   digitalWrite(CS, HIGH);
 }
-

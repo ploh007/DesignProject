@@ -25,9 +25,16 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	
 	private static final int TIME_OUT = 2000;
 	private static final int DATA_RATE = 9600;
+	
+	private Comparator comparator;
+	
+	
+	public SerialTest(Comparator comparator) {
+		this.comparator = comparator;
+	}
 
 
-	public void initialize() {
+	private void initialize() {
 
 		CommPortIdentifier portId = null;
 		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -61,6 +68,7 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 			System.err.println(e.toString());
 		}
 	}
+	
 
 	public synchronized void close() {
 		if (serialPort != null) {
@@ -68,12 +76,23 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 			serialPort.close();
 		}
 	}
+	
 
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				String inputLine=input.readLine();
+				String inputLine = input.readLine();
+				String [] dataElements = inputLine.split(":"); //split into... dataX | dataY | dataZ | jerkVector
+				
+				double [] dataX = Utils.stringArrayToDoubleArray(dataElements[0].split(","));
+				double [] dataY = Utils.stringArrayToDoubleArray(dataElements[1].split(","));
+				double [] dataZ = Utils.stringArrayToDoubleArray(dataElements[2].split(","));
+				
+				double [] jerkVector = Utils.stringArrayToDoubleArray(dataElements[3].split(","));
+				double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
+				
+				comparator.getGesture(fft, jerkVector);
 
 				System.out.println(inputLine);		
 				
@@ -82,6 +101,7 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 			}
 		}
 	}
+	
 	
 	public void run() {
 		initialize();
