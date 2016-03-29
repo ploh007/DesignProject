@@ -25,12 +25,16 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	
 	private static final int TIME_OUT = 2000;
 	private static final int DATA_RATE = 9600;
+	private static final int CALIBRATION = 0;
+	private static final int NOT_CALIBRATION = 1;
+	private int mode = 0;
 	
 	private Comparator comparator;
+	private SampleDao sampleDao;
 	
-	
-	public SerialTest(Comparator comparator) {
+	public SerialTest(Comparator comparator, SampleDao sampleDao) {
 		this.comparator = comparator;
+		this.sampleDao = sampleDao;
 	}
 
 
@@ -79,7 +83,7 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	
 
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
-		
+		System.out.println("sadfasdfadsf");
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine = input.readLine();
@@ -88,14 +92,16 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 				double [] dataX = Utils.stringArrayToDoubleArray(dataElements[0].split(","));
 				double [] dataY = Utils.stringArrayToDoubleArray(dataElements[1].split(","));
 				double [] dataZ = Utils.stringArrayToDoubleArray(dataElements[2].split(","));
-				
 				double [] jerkVector = Utils.stringArrayToDoubleArray(dataElements[3].split(","));
-				double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
-				
-				comparator.getGesture(fft, jerkVector);
-
-				System.out.println(inputLine);		
-				
+				System.out.println("Detected gesture");
+				if(mode == CALIBRATION) {
+					sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
+				}else{
+					
+					double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
+					
+					System.out.println(comparator.getGesture(fft, jerkVector));
+				}
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}

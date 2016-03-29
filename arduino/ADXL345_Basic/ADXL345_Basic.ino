@@ -20,6 +20,7 @@ unsigned char values[10];
 //These variables will be used to hold the x,y and z axis accelerometer values.
 int x,y,z;
 
+float capturedJerkVector[3];
 
 float dataBuffer [3][64];
 int bufferHead = 0;
@@ -28,7 +29,7 @@ int BUFFER_SIZE = 64;
 int THRESHOLD = 100;
 
 int WAITING = 0;
-int CAPTURING = 0;
+int CAPTURING = 1;
 
 int state = 0;
 int counter = 0;
@@ -40,7 +41,7 @@ void setup(){
   //Configure the SPI connection for the ADXL345.
   SPI.setDataMode(SPI_MODE3);
   //Create a serial connection to display the data on the terminal.
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //Set up the Chip Select pin to be an output from the Arduino.
   pinMode(CS, OUTPUT);
@@ -68,21 +69,22 @@ void loop(){
 
   dataBuffer[0][bufferHead] = x;
   dataBuffer[1][bufferHead] = y;
-  dataBuffer[2][bufferHead] = x;
+  dataBuffer[2][bufferHead] = z;
   
-
   float jerkMagnitude = getJerkMagnitude();
-  Serial.println(jerkMagnitude);
-/*
+  //Serial.println(state);
+
   if(state == WAITING && jerkMagnitude > THRESHOLD) {
     state = CAPTURING;
     counter = 31;
+    getJerkVector(capturedJerkVector);
   }else if(state == CAPTURING) {
     if(counter <= 0) {
       state = WAITING;
-      Serial.println(getDataString());
+      printDataString();
     }
-  }*/
+    counter--;
+  }
   
   updateBufferHead();
   
@@ -90,14 +92,12 @@ void loop(){
 }
 
 void updateBufferHead() {
-  bufferHead = (bufferHead++) % BUFFER_SIZE;
+  bufferHead = (bufferHead + 1) % BUFFER_SIZE;
 }
 
 
 //compute jerk vector
-float* getJerkVector() {
-  
-  float jerkVector[3];
+void getJerkVector(float *jerkVector) {
   
   for(int i=0;i<3;i++) {
     
@@ -108,14 +108,13 @@ float* getJerkVector() {
     
     jerkVector[i] = (dataBuffer[i][bufferHead] - dataBuffer[i][previousBufferHead]);
   }
-  
-  return jerkVector;
 }
 
 //computes jerk magnitude
 float getJerkMagnitude() {
   
-  float* jerkVector = getJerkVector();
+  float jerkVector[3];
+  getJerkVector(jerkVector);
   
   float jerkMagnitude = 0;
   
@@ -129,26 +128,22 @@ float getJerkMagnitude() {
 }
 
 
-String getDataString() {
-  
-  String dataString = "";
+void printDataString() {
   
   for(int i=0;i<3;i++) {
+    String dataString = "";
     for(int j=0;j<BUFFER_SIZE;j++)
     {
-      int bufferIndex = j;
+      int bufferIndex = bufferHead-j;
       if(bufferIndex < 0) {
         bufferIndex += BUFFER_SIZE;
       }
       
-      float* jerkVector = getJerkVector();
-      
       dataString += String(dataBuffer[i][bufferIndex]) + ",";
-      dataString += ":" + String(jerkVector[0]) + "," + String(jerkVector[0]) + "," + String(jerkVector[0]);
     }
+    Serial.print(dataString + ":");
   }
-  
-  return dataString;
+  Serial.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 
 //This function will write a value to a register on the ADXL345.
