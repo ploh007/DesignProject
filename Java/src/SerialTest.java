@@ -1,10 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
@@ -24,7 +19,7 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	private BufferedReader input;
 	
 	private static final int TIME_OUT = 2000;
-	private static final int DATA_RATE = 9600;
+	private static final int DATA_RATE = 115200;
 	private static final int CALIBRATION = 0;
 	private static final int NOT_CALIBRATION = 1;
 	private int mode = 0;
@@ -83,17 +78,18 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	
 
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
-		System.out.println("sadfasdfadsf");
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
 				String inputLine = input.readLine();
+				System.out.println(inputLine);
+				
 				String [] dataElements = inputLine.split(":"); //split into... dataX | dataY | dataZ | jerkVector
 				
 				double [] dataX = Utils.stringArrayToDoubleArray(dataElements[0].split(","));
 				double [] dataY = Utils.stringArrayToDoubleArray(dataElements[1].split(","));
 				double [] dataZ = Utils.stringArrayToDoubleArray(dataElements[2].split(","));
 				double [] jerkVector = Utils.stringArrayToDoubleArray(dataElements[3].split(","));
-				System.out.println("Detected gesture");
+				
 				if(mode == CALIBRATION) {
 					sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
 				}else{
@@ -112,5 +108,11 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	public void run() {
 		initialize();
 		System.out.println("Initialized serial port reader!");
+		try {
+			Thread.sleep(1000000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

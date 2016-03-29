@@ -22,7 +22,7 @@ int x,y,z;
 
 float capturedJerkVector[3];
 
-float dataBuffer [3][64];
+int dataBuffer [3][64];
 int bufferHead = 0;
 
 int BUFFER_SIZE = 64;
@@ -72,7 +72,6 @@ void loop(){
   dataBuffer[2][bufferHead] = z;
   
   float jerkMagnitude = getJerkMagnitude();
-  //Serial.println(state);
 
   if(state == WAITING && jerkMagnitude > THRESHOLD) {
     state = CAPTURING;
@@ -129,9 +128,9 @@ float getJerkMagnitude() {
 
 
 void printDataString() {
+  String dataString = "";
   
   for(int i=0;i<3;i++) {
-    String dataString = "";
     for(int j=0;j<BUFFER_SIZE;j++)
     {
       int bufferIndex = bufferHead-j;
@@ -141,9 +140,9 @@ void printDataString() {
       
       dataString += String(dataBuffer[i][bufferIndex]) + ",";
     }
-    Serial.print(dataString + ":");
+    dataString += ":";
   }
-  Serial.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
+  Serial.println(dataString + String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 
 //This function will write a value to a register on the ADXL345.
