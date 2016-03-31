@@ -7,7 +7,7 @@ import gnu.io.SerialPortEventListener;
 import java.util.Enumeration;
 
 
-public class SerialTest implements SerialPortEventListener, Runnable {
+public class SerialReader implements SerialPortEventListener, Runnable {
 	
 	private SerialPort serialPort;
 	
@@ -22,12 +22,24 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 	private static final int DATA_RATE = 115200;
 	private static final int CALIBRATION = 0;
 	private static final int NOT_CALIBRATION = 1;
-	private int mode = 0;
+	
+	private static final int DATA_X = 0;
+	private static final int DATA_Y = 1;
+	private static final int DATA_Z = 2;
+	private static final int JERK_VECTOR = 3;
+	
+	private int mode = NOT_CALIBRATION;
+	private int serialReadState = DATA_X;
+	
+	private double [] dataX = null;
+	private double [] dataY = null;
+	private double [] dataZ = null;
+	private double [] jerkVector = null;
 	
 	private Comparator comparator;
 	private SampleDao sampleDao;
 	
-	public SerialTest(Comparator comparator, SampleDao sampleDao) {
+	public SerialReader(Comparator comparator, SampleDao sampleDao) {
 		this.comparator = comparator;
 		this.sampleDao = sampleDao;
 	}
@@ -83,23 +95,39 @@ public class SerialTest implements SerialPortEventListener, Runnable {
 				String inputLine = input.readLine();
 				System.out.println(inputLine);
 				
-				String [] dataElements = inputLine.split(":"); //split into... dataX | dataY | dataZ | jerkVector
-				
-				double [] dataX = Utils.stringArrayToDoubleArray(dataElements[0].split(","));
-				double [] dataY = Utils.stringArrayToDoubleArray(dataElements[1].split(","));
-				double [] dataZ = Utils.stringArrayToDoubleArray(dataElements[2].split(","));
-				double [] jerkVector = Utils.stringArrayToDoubleArray(dataElements[3].split(","));
-				
-				if(mode == CALIBRATION) {
-					sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
+				if(serialReadState == DATA_X) {
+					
+					serialReadState = DATA_Y;
+					dataX = Utils.stringArrayToDoubleArray(inputLine.split(","));
+					
+				}else if(serialReadState == DATA_Y) {
+					
+					serialReadState = DATA_Z;
+					dataY = Utils.stringArrayToDoubleArray(inputLine.split(","));
+					
+				}else if(serialReadState ==  DATA_Z) {
+					
+					serialReadState = JERK_VECTOR;
+					dataZ = Utils.stringArrayToDoubleArray(inputLine.split(","));
+					
+				}else if(serialReadState == JERK_VECTOR) {
+					
+					serialReadState = DATA_X;
+					jerkVector  = Utils.stringArrayToDoubleArray(inputLine.split(","));
+					
+					if(mode == CALIBRATION) {
+						sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
+					}else{
+						
+						double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
+						
+						System.out.println(comparator.getGesture(fft, jerkVector));
+					}
 				}else{
-					
-					double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
-					
-					System.out.println(comparator.getGesture(fft, jerkVector));
-				}
+					serialReadState = DATA_X;
+				}				
 			} catch (Exception e) {
-				System.err.println(e.toString());
+				e.printStackTrace();
 			}
 		}
 	}

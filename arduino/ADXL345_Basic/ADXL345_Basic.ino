@@ -128,9 +128,9 @@ float getJerkMagnitude() {
 
 
 void printDataString() {
-  String dataString = "";
   
   for(int i=0;i<3;i++) {
+    String dataString = "";
     for(int j=0;j<BUFFER_SIZE;j++)
     {
       int bufferIndex = bufferHead-j;
@@ -138,11 +138,16 @@ void printDataString() {
         bufferIndex += BUFFER_SIZE;
       }
       
-      dataString += String(dataBuffer[i][bufferIndex]) + ",";
+      if(j != BUFFER_SIZE - 1) {
+        dataString += String(dataBuffer[i][bufferIndex]) + ",";
+      }else{
+        dataString += String(dataBuffer[i][bufferIndex]);
+      } 
+      
     }
-    dataString += ":";
+    Serial.println(dataString);
   }
-  Serial.println(dataString + String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
+  Serial.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 
 //This function will write a value to a register on the ADXL345.
