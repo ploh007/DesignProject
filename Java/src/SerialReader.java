@@ -94,43 +94,54 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 				String inputLine = input.readLine();
 				System.out.println(inputLine);
 				
-				if(serialReadState == DATA_X) {
-					
-					serialReadState = DATA_Y;
-					dataX = Utils.stringArrayToDoubleArray(inputLine.split(","));
-					
-				}else if(serialReadState == DATA_Y) {
-					
-					serialReadState = DATA_Z;
-					dataY = Utils.stringArrayToDoubleArray(inputLine.split(","));
-					
-				}else if(serialReadState ==  DATA_Z) {
-					
-					serialReadState = JERK_VECTOR;
-					dataZ = Utils.stringArrayToDoubleArray(inputLine.split(","));
-					
-				}else if(serialReadState == JERK_VECTOR) {
-					
-					serialReadState = DATA_X;
-					jerkVector  = Utils.stringArrayToDoubleArray(inputLine.split(","));
-					
-					if(mode == CALIBRATION) {
-						sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
+				if(inputLine == "TOOLOW") {
+					//do websocket shit
+				}else{				
+					if(serialReadState == DATA_X) {
+						
+						serialReadState = DATA_Y;
+						dataX = Utils.stringArrayToDoubleArray(inputLine.split(","));
+						
+					}else if(serialReadState == DATA_Y) {
+						
+						serialReadState = DATA_Z;
+						dataY = Utils.stringArrayToDoubleArray(inputLine.split(","));
+						
+					}else if(serialReadState ==  DATA_Z) {
+						
+						serialReadState = JERK_VECTOR;
+						dataZ = Utils.stringArrayToDoubleArray(inputLine.split(","));
+						
+					}else if(serialReadState == JERK_VECTOR) {
+						
+						serialReadState = DATA_X;
+						jerkVector  = Utils.stringArrayToDoubleArray(inputLine.split(","));
+						
+						if(mode == CALIBRATION) {
+							sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
+						}else{
+							
+							double [] fft = Utils.combineSampleArrays(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
+							
+							System.out.println(comparator.getGesture(fft, jerkVector));
+						}
 					}else{
-						
-						double [] fft = Utils.combineSampleArrays(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
-						
-						System.out.println(comparator.getGesture(fft, jerkVector));
-					}
-				}else{
-					serialReadState = DATA_X;
-				}				
+						serialReadState = DATA_X;
+					}			
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
+	
+	public void setMode(int mode) {
+		this.mode = mode;
+		if(mode == NOT_CALIBRATION) {
+			comparator.loadSamples();
+		}
+	}
 	
 	public void run() {
 	}

@@ -26,13 +26,19 @@ int dataBuffer [3][64];
 int bufferHead = 0;
 
 int BUFFER_SIZE = 64;
-int THRESHOLD = 100;
+int THRESHOLD = 40;
+int CALIBRATION_THRESHOLD = 30;
 
 int WAITING = 0;
 int CAPTURING = 1;
+int CALIBRATION = 0;
+int NOT_CALIBRATION = 1;
 
+int calibrationState = 1;
 int state = 0;
 int counter = 0;
+
+boolean alreadySent = false;
 
 
 void setup(){
@@ -81,8 +87,14 @@ void loop(){
     if(counter <= 0) {
       state = WAITING;
       printDataString();
+      alreadySent = false;
     }
     counter--;
+  }else if(calibrationState == CALIBRATION && jerkMagnitude < THRESHOLD && jerkMagnitude > CALIBRATION_THRESHOLD) {
+    if(!alreadySent) {
+      Serial.println("TOOLOW");
+      alreadySent = true;
+    }
   }
   
   updateBufferHead();
@@ -126,6 +138,16 @@ float getJerkMagnitude() {
   return jerkMagnitude;
 }
 
+void serialEvent() {
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    if(inChar == 'C') {
+      calibrationState = CALIBRATION;
+    }else if(inChar == 'N') {
+      calibrationState = NOT_CALIBRATION;
+    }
+  }
+}
 
 void printDataString() {
   
