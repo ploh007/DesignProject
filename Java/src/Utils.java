@@ -45,7 +45,7 @@ public final class Utils {
         return doubleArray;
     }
     
-    public static double[] comparison(double [] dataX, double [] dataY, double [] dataZ) {
+    public static double[] combineSampleArrays(double [] dataX, double [] dataY, double [] dataZ) {
     	
     	int length = dataX.length*3;
     	double [] comparison = new double[length];

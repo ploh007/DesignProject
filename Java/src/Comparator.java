@@ -15,6 +15,7 @@ public class Comparator {
   public String getGesture(double [] fft, double [] jerkVector) {
     for(Sample sample : sampleDatabase) {
       double distance = Utils.distance(sample.getFft(), fft);
+      System.out.println(distance);
       double angle = Utils.angle(sample.getJerkVector(), jerkVector);
       
       if(distance < distanceThreshold && angle < angleThreshold) {

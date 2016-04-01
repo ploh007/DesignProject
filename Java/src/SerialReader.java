@@ -20,6 +20,7 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 	
 	private static final int TIME_OUT = 2000;
 	private static final int DATA_RATE = 115200;
+	
 	private static final int CALIBRATION = 0;
 	private static final int NOT_CALIBRATION = 1;
 	
@@ -28,7 +29,7 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 	private static final int DATA_Z = 2;
 	private static final int JERK_VECTOR = 3;
 	
-	private int mode = NOT_CALIBRATION;
+	private int mode;
 	private int serialReadState = DATA_X;
 	
 	private double [] dataX = null;
@@ -39,13 +40,11 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 	private Comparator comparator;
 	private SampleDao sampleDao;
 	
-	public SerialReader(Comparator comparator, SampleDao sampleDao) {
+	public SerialReader(int mode, Comparator comparator, SampleDao sampleDao) {
+		this.mode = mode;
 		this.comparator = comparator;
 		this.sampleDao = sampleDao;
-	}
-
-
-	private void initialize() {
+		
 
 		CommPortIdentifier portId = null;
 		Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -78,8 +77,9 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
+		
+		System.out.println("Initialized serial port reader!");
 	}
-	
 
 	public synchronized void close() {
 		if (serialPort != null) {
@@ -88,7 +88,6 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 		}
 	}
 	
-
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
@@ -119,7 +118,7 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 						sampleDao.writeSamples(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ), jerkVector);
 					}else{
 						
-						double [] fft = Utils.comparison(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
+						double [] fft = Utils.combineSampleArrays(Fft.fft(dataX), Fft.fft(dataY), Fft.fft(dataZ));
 						
 						System.out.println(comparator.getGesture(fft, jerkVector));
 					}
@@ -134,13 +133,5 @@ public class SerialReader implements SerialPortEventListener, Runnable {
 	
 	
 	public void run() {
-		initialize();
-		System.out.println("Initialized serial port reader!");
-		try {
-			Thread.sleep(1000000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
