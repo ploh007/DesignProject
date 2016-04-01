@@ -83,7 +83,7 @@ svg2.append("g")
 .call(d3.svg.axis().scale(y).orient("left"));
 
 var path2 = svg2.append("g")
-.attr("clip-path", "url(#clip3)")
+.attr("clip-path", "url(#clip2)")
 .append("path")
 .datum(data2)
 .attr("class", "line")
