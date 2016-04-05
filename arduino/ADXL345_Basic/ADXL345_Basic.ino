@@ -26,19 +26,21 @@ int dataBuffer [3][64];
 int bufferHead = 0;
 
 int BUFFER_SIZE = 64;
-int THRESHOLD = 40;
-int CALIBRATION_THRESHOLD = 30;
+int THRESHOLD = 100;
+int CALIBRATION_THRESHOLD = 40;
 
 int WAITING = 0;
 int CAPTURING = 1;
-int CALIBRATION = 0;
-int NOT_CALIBRATION = 1;
 
-int calibrationState = 1;
-int state = 0;
+int CALIBRATION_MODE = 0;
+int USER_MODE = 1;
+int RAW_DATA_MODE = 2;
+
+int tooLowCounter;
+
+int mode = 0;
+int captureState = 0;
 int counter = 0;
-
-boolean alreadySent = false;
 
 
 void setup(){
@@ -78,23 +80,48 @@ void loop(){
   dataBuffer[2][bufferHead] = z;
   
   float jerkMagnitude = getJerkMagnitude();
-
-  if(state == WAITING && jerkMagnitude > THRESHOLD) {
-    state = CAPTURING;
-    counter = 31;
-    getJerkVector(capturedJerkVector);
-  }else if(state == CAPTURING) {
-    if(counter <= 0) {
-      state = WAITING;
-      printDataString();
-      alreadySent = false;
+  
+  if(mode == CALIBRATION_MODE) {
+    
+    if(captureState == WAITING && jerkMagnitude > THRESHOLD) {
+      tooLowCounter = 0;
+      captureState = CAPTURING;
+      counter = 31;
+      getJerkVector(capturedJerkVector);
+    }else if(captureState == CAPTURING) {
+      tooLowCounter = 0;
+      if(counter <= 0) {
+        captureState = WAITING;
+        printDataString();
+      }
+      counter--;
+    }else if(jerkMagnitude < THRESHOLD && jerkMagnitude > CALIBRATION_THRESHOLD) {
+      tooLowCounter = 1;
     }
-    counter--;
-  }else if(calibrationState == CALIBRATION && jerkMagnitude < THRESHOLD && jerkMagnitude > CALIBRATION_THRESHOLD) {
-    if(!alreadySent) {
+    
+    if(tooLowCounter > 0 && tooLowCounter <= 32) {
+      tooLowCounter++;
+    }else if(tooLowCounter > 32) {
       Serial.println("TOOLOW");
-      alreadySent = true;
+      tooLowCounter = 0;
     }
+    
+  }else if(mode == USER_MODE) {
+    
+    if(captureState == WAITING && jerkMagnitude > THRESHOLD) {
+      captureState = CAPTURING;
+      counter = 31;
+      getJerkVector(capturedJerkVector);
+    }else if(captureState == CAPTURING) {
+      if(counter <= 0) {
+        captureState = WAITING;
+        printDataString();
+      }
+      counter--;
+    }
+    
+  }else if(mode == RAW_DATA_MODE) {
+    Serial.println(String(x) + "," + String(y) + "," + String(z));
   }
   
   updateBufferHead();
@@ -142,9 +169,14 @@ void serialEvent() {
   while (Serial.available()) {
     char inChar = (char)Serial.read();
     if(inChar == 'C') {
-      calibrationState = CALIBRATION;
-    }else if(inChar == 'N') {
-      calibrationState = NOT_CALIBRATION;
+      mode = CALIBRATION_MODE;
+      Serial.println("C");
+    }else if(inChar == 'U') {
+      mode = USER_MODE;
+      Serial.println("U");
+    }else if(inChar == 'R') {
+      mode = RAW_DATA_MODE;
+      Serial.println("R");
     }
   }
 }
