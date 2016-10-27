@@ -18,11 +18,6 @@ This system was constructed to improve upon conventional methods of controlling 
 ### Usage
 
 ### Contributing
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
 
 ### History
 In September 2015, this project started off as a brainstorming idea that we had and decided to run with for a design project for our fourth year project. 
@@ -31,4 +26,3 @@ In September 2015, this project started off as a brainstorming idea that we had 
 [Jordan Hatcher](https://jordan-hatcher.com/) && [Paul Loh](http://www.paulloh.com)
 
 ### License
-TODO: Write license
