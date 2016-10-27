@@ -1,0 +1,68 @@
+/**
+ * CSS Style for Help Page
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+
+/* 
+ *  Override Bootstrap Navigation Pills 
+ */
+
+.nav-pills {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.nav-pills > li > a {
+    border-left: 2px solid #ddd;
+    color: #444;
+    border-radius: 0px;
+}
+
+.nav-pills > li > a:hover {
+    border-left: 2px solid #782d08;
+    color: #c0392b;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    border-left: 2px solid #c0392b;
+    background-color: #c0392b;
+    color: #fff;
+    animation: flipInX 0.75s;
+}
+
+
+/* 
+ *  Override Bootstrap Thumbnail 
+ */
+
+.thumbnail {
+    color: #000;
+    padding: 0px;
+    width: 100%;
+    border: none;
+    animation: fadeInDown 0.75s;
+}
+
+.thumbnail-alt {
+    animation: fadeInUp 0.75s;
+}
+
+.thumbnail .caption {
+    color: #000;
+    text-align: center;
+    height: 130px;
+}
+
+
+/*
+ * Custom  Classes for API Buttons
+ */
+
+.btn-api {
+    border: none;
+}

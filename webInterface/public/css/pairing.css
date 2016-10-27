@@ -1,0 +1,41 @@
+.circleNumber {
+	border-radius: 50%;
+	border: 4px inset #fff;	
+	font-size: 3em;
+ 	width: 60px;
+    height: 60px;
+    padding: 4px;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.pairingDetails {
+	/*border: 3px solid #000;	*/
+	border-radius: 5%;
+	/*color: #fff;*/
+	vertical-align: middle;
+    text-align: center;
+	margin: 10px;
+	padding-top: 20px;
+	height: 120px;
+}
+
+.pairingHolder {
+	border: 2px solid #000;
+	border-radius: 5%;
+	background-color: #263238;
+}
+
+.pairingText {
+	border-bottom-right-radius: 6%;
+	border-bottom-left-radius: 6%;
+	padding: 20px;
+	background-color: #fff;
+	min-height: 100px;
+}
+
+.divider {
+	border: 2px solid #000;
+}

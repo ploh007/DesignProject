@@ -1,0 +1,62 @@
+/**
+ * CSS Style for D3 Graph
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+/* 
+ *  Graph CSS Styling for D3 Graphs
+ */
+
+
+svg {
+    font: 10px sans-serif;
+    color: #000;
+}
+
+.line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+    shape-rendering: crispEdges;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes show {
+  to {
+    opacity: 1;
+  }
+}
+
+svg {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+svg path {
+  stroke-width: 0.25;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-name: draw;
+  animation-timing-function: linear;
+}
+svg path#case {
+  stroke: #fff;
+  stroke-dasharray: 2810;
+  stroke-dashoffset: 2810;
+  animation-duration: 15s;
+}

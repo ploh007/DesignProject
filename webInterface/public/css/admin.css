@@ -1,0 +1,16 @@
+/**
+ * CSS Style for Admin Page.
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+/**
+ * Table
+ * 
+ * Sets the table font-size for admin pages.
+ */
+
+table {
+    font-size: 0.9em;
+}

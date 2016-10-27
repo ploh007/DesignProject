@@ -177,6 +177,9 @@ void serialEvent() {
     }else if(inChar == 'R') {
       mode = RAW_DATA_MODE;
       Serial.println("R");
+    } else if(inChar == 'P') {
+      // Request ping for arduino device controller ID
+      Serial.println("101");
     }
   }
 }
@@ -201,6 +204,7 @@ void printDataString() {
     }
     Serial.println(dataString);
   }
+  Serial.flush();
   Serial.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 

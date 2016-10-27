@@ -1,0 +1,89 @@
+/**
+ * CSS Style for Calibration Page Components
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+/**
+ * CSS Style for Calibration Notifier
+ */
+#calibration-notifier {
+    animation: fadeIn .5s;
+    animation-iteration-count: 3;
+    animation-direction: alternate;
+    margin: 20px;
+    text-transform: uppercase;
+}
+
+/**
+ * CSS Style for Calibration Button Hover
+ */
+#calibration-jumbrotron {
+    background-color: #fff;
+    color: #000;
+    height: 100%;
+    animation: fadeInDown 0.75s;
+}
+
+/**
+ * CSS Style for Calibration Button
+ */
+#calibration-btn {
+    background-color: #fff;
+    border-radius: 50%;
+    border: 5px double #000;
+    color: #000;
+    width: 130px;
+    height: 130px;
+    transition: 0.7s all;
+    overflow: hidden;
+}
+
+/**
+ * CSS Style for Calibration Button Hover Action
+ */
+#calibration-btn:hover {
+    background-color: #c0392b;
+    color: #fff;
+/*    -webkit-transform:  rotate(90deg);
+    -moz-transform:  rotate(90deg);
+    -ms-transform:  rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform:  rotate(90deg);*/
+}
+
+/**
+ * CSS Style for Calibration Peek-In Notification
+ */
+#calibration-notification {
+    display: block;
+    position: absolute;
+    z-index: 101;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    background: #fde073;
+    text-align: center;
+    line-height: 2.5;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 5px black;
+    -moz-box-shadow: 0 0 5px black;
+    -o-box-shadow: 0 0 5px black;
+    box-shadow: 0 0 5px black;
+    -webkit-transform: translateY(-50px);
+    -webkit-animation: slideDown 1.5s 0.1s 1 ease forwards;
+    -moz-transform: translateY(-50px);
+    -moz-animation: slideDown 1.5s 0.1s 1 ease forwards;
+    -o-transform: translateY(-50px);
+    -o-animation: slideDown 1.5s 0.1s 1 ease forwards;
+    transform: translateY(-50px);
+    animation: slideDown 1.5s 0.1s 1 ease forwards;
+}
+
+/**
+ * CSS for closing Calibration Peek-In Notification
+ */
+.cssanimations .csstransforms #close {
+    display: none;
+}
