@@ -252,6 +252,17 @@ table {
     text-align: center;
 }
 
+/* Content Loading Spinner */
+#loading {
+    background: url(../img/balls.gif) center no-repeat rgba(255,255,255,0.85);
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 9999;
+    display:none;
+}
 
 /* 
  * Responsive UI Controls 

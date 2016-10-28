@@ -1,4 +1,11 @@
-.circleNumber {
+/**
+ * CSS Style for Pairing Page
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+.circle-number {
 	border-radius: 50%;
 	border: 4px inset #fff;	
 	font-size: 3em;
@@ -11,10 +18,8 @@
     color: #fff;
 }
 
-.pairingDetails {
-	/*border: 3px solid #000;	*/
+.pairing-details {
 	border-radius: 5%;
-	/*color: #fff;*/
 	vertical-align: middle;
     text-align: center;
 	margin: 10px;
@@ -22,13 +27,13 @@
 	height: 120px;
 }
 
-.pairingHolder {
+.pairing-holder {
 	border: 2px solid #000;
 	border-radius: 5%;
-	background-color: #263238;
+	background-color: #c0392b;
 }
 
-.pairingText {
+.pairing-text {
 	border-bottom-right-radius: 6%;
 	border-bottom-left-radius: 6%;
 	padding: 20px;
@@ -38,4 +43,13 @@
 
 .divider {
 	border: 2px solid #000;
+}
+
+#errors {
+	animation: fadeInDown 0.75s;
+	display:none;
+}
+
+#mydevicesdata {
+	animation: fadeInDown 0.75s;
 }

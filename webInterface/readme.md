@@ -25,4 +25,4 @@ In September 2015, this project started off as a brainstorming idea that we had 
 ### Constructed by
 [Jordan Hatcher](https://jordan-hatcher.com/) && [Paul Loh](http://www.paulloh.com)
 
-### License
+### Project License

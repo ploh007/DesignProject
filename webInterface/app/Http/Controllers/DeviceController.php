@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Device;
 use App\Http\Requests;
+use App\Repositories\DeviceRepository;
 
 class DeviceController extends Controller
 {
+
+    /**
+     * The device repository instance.
+     *
+     * @var TaskRepository
+     */
+    protected $devices;
 
     protected $redirectTo = '/database';
 
@@ -17,23 +25,35 @@ class DeviceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
+    public function __construct(DeviceRepository $devices)
     {
         $this->middleware('auth');
+        $this->devices = $devices;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new device.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        // 
+        $this->validate($request, [
+            'name' => 'required|max:255',
+        ]);
+
+        $request->user()->tasks()->create([
+            'name' => $request->name,
+        ]);
+
     }
 
-    public function index(){
-        return view("database.test");
+    public function index(Request $request)
+    {
+        return view("database.test", [
+            'devices' =>  $this->devices->getAll(),
+            'devicelist' => $request->user()->devices,
+        ]);
     }
 
     /**
@@ -42,21 +62,48 @@ class DeviceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function showDevices(Request $request)
     {
-        //
+        $userdevices = $request->user()->devices;
+        return response()->json(view('database.devices', ['devicelist' => $userdevices])->render(), 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function pairDevice(Request $request)
+    {
         $this->validate($request, [
-            'name' => 'required|max:255',
+            'deviceslist' => 'exists:devices,id',
         ]);
 
-        $device = new Device;
-
-        $device->device_id = $request->name;
-        $device->activeFlag = false;
-
-        $device->save();
+        $device_id = $request->deviceslist;
+        $request->user()->devices()->attach($device_id);
         
-        return redirect('/database');
+        $userdevices = $request->user()->devices;
+        return response()->json(view('database.devices', ['devicelist' => $userdevices])->render(), 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function unpairDevice(Request $request)
+    {
+        $this->validate($request, [
+            'deviceslist' => 'exists:device_user,pivotdevice_id',
+        ]);
+
+        $device_id = $request->deviceslist;
+        $request->user()->devices()->detach($device_id);
+
+        $userdevices = $request->user()->devices;
+        return response()->json(view('database.devices', ['devicelist' => $userdevices])->render(), 200);
     }
 
     /**
@@ -103,4 +150,5 @@ class DeviceController extends Controller
     {
         //
     }
+
 }

@@ -1,3 +1,15 @@
+/**
+ * Common Javascript
+ * @author Paul Loh
+ * @author Jordan Hatcher
+ * @version 1.0
+ */
+
+/*
+ * Sets the arduino status mode
+ * @param {string} arduinoStatus - The status to set the arduino to (CONNECTED/DISCONNECTED)
+ * @param {string} mode - The mode of the 
+ */
 var setArduinoStatus = function(arduinoStatus, mode) {
     // CONNECTED
     if (arduinoStatus === "CONNECTED") {

@@ -20,8 +20,8 @@
     <script src="./js/wow.js"></script>
     <script src="./js/common.js"></script>
     <!-- FONTS -->
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+<!--     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'> -->
 </head>
 <!-- END HEAD COMPONENT -->
 <!-- NAVBAR COMPONENT -->
@@ -96,6 +96,9 @@
 </nav>
 <!-- END NAVBAR COMPONENT -->
 @yield('content')
+
+<div id="loading"></div>
+
 <!-- FOOTER COMPONENT -->
 <footer>
     <div> CEG 4912/4913 © 2016. Jordan Hatcher || Paul Loh </div>
@@ -104,6 +107,7 @@
 <!-- END FOOTER COMPONENT -->
 
 </html>
+
 <!-- ERROR MODAL -->
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal">
     <div class="modal-dialog" role="document">
@@ -126,4 +130,5 @@
     </div>
 </div>
 <!-- END ERROR MODAL -->
+
 <!-- JS SCRIPTS -->

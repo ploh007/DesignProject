@@ -14,8 +14,9 @@ class CreateSamplesTable extends Migration
     public function up()
     {
         Schema::create('samples', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->integer('sample_id');
-            $table->integer('pair_id');
+            $table->integer('pair_id')->unsigned();
             $table->string('gestureName');
             $table->mediumtext('sampleData');
             $table->foreign('pair_id')->references('pair_id')->on('device_user');

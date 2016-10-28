@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Device;
 
 class User extends Authenticatable
 {
@@ -27,8 +28,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function device()
+    public function devices()
     {
-        return $this->belongsToMany('Device', 'device_user', 'user_id', 'device_id');
+        return $this->belongsToMany('App\Device', 'device_user', 'pivotuser_id', 'pivotdevice_id');
     }
 }

@@ -14,13 +14,13 @@ class CreateDeviceUserTable extends Migration
     public function up()
     {
         Schema::create('device_user', function (Blueprint $table) {
-            $table->integer('pair_id');
-            $table->integer('user_id');
-            $table->integer('device_id');
+            $table->engine = 'InnoDB';
+            $table->increments('pair_id');
+            $table->integer('pivotuser_id')->unsigned();
+            $table->integer('pivotdevice_id');
             $table->timestamps();
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->primary('pair_id');
+            $table->foreign('pivotuser_id')->references('id')->on('users');
+            $table->foreign('pivotdevice_id')->references('id')->on('devices');
         });
     }
 

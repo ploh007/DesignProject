@@ -51,8 +51,8 @@ Route::get('/help', function () {
 });
 
 Route::get('/database', "DeviceController@index");
-
-Route::post('/database', 'DeviceController@store');
+Route::post('/database-show', 'DeviceController@showDevices');
+Route::post('/database-pair', 'DeviceController@pairDevice');
+Route::post('/database-unpair', 'DeviceController@unpairDevice');
 
 Auth::routes();
-	

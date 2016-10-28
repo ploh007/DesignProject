@@ -14,11 +14,12 @@ class CreateDevicesTable extends Migration
     public function up()
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->integer('device_id');
+            $table->engine = 'InnoDB';
+            $table->integer('id');
             $table->boolean('activeFlag');
             $table->timestamps();
 
-            $table->primary('device_id');
+            $table->primary('id');
         });
     }
 

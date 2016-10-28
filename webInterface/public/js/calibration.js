@@ -186,7 +186,7 @@ var startCalibration = function() {
     }
 
     /**
-    * Error reached on the Websocket connection Handler
+    * Error reached on the Websocket connection handler
     */
     conn.onerror = function(e) {
 
