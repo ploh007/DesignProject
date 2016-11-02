@@ -181,8 +181,7 @@ void loop(){
   }
   
   updateBufferHead();
-  
-  delay(100);
+  softwareSerialEvent();
 }
 
 void updateBufferHead() {
@@ -221,19 +220,28 @@ float getJerkMagnitude() {
   return jerkMagnitude;
 }
 
-
-
-/*
-void serialEvent() {
+void softwareSerialEvent() {
   while (client.available()) {
-    char inChar = (char)client.read();
+    uint8_t buf[5];
+    client.read(buf, 20);
+    Serial.print((char*)buf); //#DEBUG
+    char inChar = buf[0];
+
     if(inChar == 'C') {
-      calibrationState = CALIBRATION;
-    }else if(inChar == 'N') {
-      calibrationState = NOT_CALIBRATION;
+      mode = CALIBRATION_MODE;
+      Serial.println("C");
+    }else if(inChar == 'U') {
+      mode = USER_MODE;
+      Serial.println("U");
+    }else if(inChar == 'R') {
+      mode = RAW_DATA_MODE;
+      Serial.println("R");
+    } else if(inChar == 'P') {
+      // Request ping for arduino device controller ID
+      client.println("101");
     }
   }
-}*/
+}
 
 void printDataString() {
   
