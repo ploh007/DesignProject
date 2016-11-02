@@ -1,6 +1,9 @@
 <?php
 
-class Comparator {
+namespace GestureRecognition;
+
+class Comparator
+{
 
   private $sampleDao;
   private $sampleDatabase;
@@ -57,8 +60,8 @@ class Comparator {
       if($peakErrorX > 0 || $peakErrorY > 0 || $peakErrorZ > 0) {	      
     	if($fftError <$distanceThreshold && $peakErrorX < $peakErrorThreshold && $peakErrorY < $peakErrorThreshold && $peakErrorZ < $peakErrorThreshold) {
     	  if($angle < $angleThreshold) { 		
-    	    echo("Successfully recognized gesture: " + $sample.getGesture());
-	        return $sample.getGesture();
+    	    echo("Successfully recognized gesture: " + $sample->getGesture());
+	        return $sample->getGesture();
     	  }
         }
       }
@@ -77,7 +80,7 @@ class Comparator {
 			  $xPeak = $listx.get($i);
 			  $yPeak = $listy.get($i);
 			  
-			  if($xPeak.getOrientation() != $yPeak.getOrientation()) {
+			  if($xPeak->getOrientation() != $yPeak->getOrientation()) {
 				  return -1;
 			  }else{
 				  $peakDistanceX += $x.get($i+1).getIndex() - $xPeak.getIndex();
@@ -93,6 +96,6 @@ class Comparator {
   }
   
   public function loadSamples() {
-	  $sampleDatabase = $sampleDao.getSamples();
+	  $sampleDatabase = $sampleDao->getSamples();
   }
 }

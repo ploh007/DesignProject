@@ -1,74 +1,88 @@
 <?php
 
-public class Sample {
+namespace GestureRecognition;
 
-  private $fft;
-  private $dataX;
-  private $dataY;
-  private $dataZ;
-  private $orientation;
+use GestureRecognition\Utils;
 
-  private $peakListX;
-  private $peakListY;
-  private $peakListZ;
-  
-  private $jerkVector;
-  private $gesture;
+class Sample
+{
+    private $fft;
+    private $dataX;
+    private $dataY;
+    private $dataZ;
+    private $orientation;
 
-  public function Sample($dataX, $dataY, $dataZ, $jerkVector, $gesture) {
-    $this->dataX = $dataX;
-    $this->dataY = $dataY;
-    $this->dataZ = $dataZ;
-    $this->orientation =  Utils::getOrientationVector($dataX, $dataY, $dataZ);
+    private $peakListX;
+    private $peakListY;
+    private $peakListZ;
 
-    $this->peakListX = Utils::getPeakList($dataX);
-    $this->peakListY = Utils::getPeakList($dataY);
-    $this->peakListZ = Utils::getPeakList($dataZ);
+    private $jerkVector;
+    private $gesture;
 
-    $this->fft = Utils::combineSampleArrays(Fft::fft($dataX), Fft::fft($dataY), Fft::fft($dataZ));
+    public function __construct($dataX, $dataY, $dataZ, $jerkVector, $gesture)
+    {
+        $this->dataX = $dataX;
+        $this->dataY = $dataY;
+        $this->dataZ = $dataZ;
+        $this->orientation =  Utils::getOrientationVector($dataX, $dataY, $dataZ);
 
-    $this->jerkVector = $jerkVector;
-    $this->gesture = $gesture;
-  }
+        $this->peakListX = Utils::getPeakList($dataX);
+        $this->peakListY = Utils::getPeakList($dataY);
+        $this->peakListZ = Utils::getPeakList($dataZ);
 
+        $this->fft = Utils::combineSampleArrays(Fft::fft($dataX), Fft::fft($dataY), Fft::fft($dataZ));
 
-    public function getFft() {
-    return $fft;
-  }
-  
-  public function getJerkVector() {
-      return $jerkVector;
-  }
+        $this->jerkVector = $jerkVector;
+        $this->gesture = $gesture;
+    }
 
-  public function getGesture() {
-    return $gesture;
-  }
-  
-  public function getDataX() {
-      return $dataX;
-  }
-  
-  public function getDataY() {
-      return $dataY;
-  }
-  
-  public function getDataZ() {
-      return $dataZ;
-  }
-  
-  public function getPeakListX() {
-      return $peakListX;
-  }
-  
-  public function getPeakListY() {
-      return $peakListY;
-  }
-  
-  public function getPeakListZ() {
-      return $peakListZ;
-  }
-  
-  public function getOrientation() {
-      return $orientation;
-  }
+    public function getFft()
+    {
+        return $this->fft;
+    }
+
+    public function getJerkVector()
+    {
+        return $this->$jerkVector;
+    }
+
+    public function getGesture()
+    {
+        return $this->$gesture;
+    }
+
+    public function getDataX()
+    {
+        return $this->$dataX;
+    }
+
+    public function getDataY()
+    {
+        return $this->$dataY;
+    }
+
+    public function getDataZ()
+    {
+        return $this->$dataZ;
+    }
+
+    public function getPeakListX()
+    {
+        return $this->$peakListX;
+    }
+
+    public function getPeakListY()
+    {
+        return $this->$peakListY;
+    }
+
+    public function getPeakListZ()
+    {
+        return $this->$peakListZ;
+    }
+
+    public function getOrientation()
+    {
+        return $this->$orientation;
+    }
 }
