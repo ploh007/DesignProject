@@ -38,9 +38,12 @@ var initiateMon = function() {
 // Initiates the Websocket connection and sets the Arduino mode 
 var startMonitoring = function() {
 
+
+    var vals = new Array(0, 0, 0);
+
     // Create a Websocket
     try {
-        var conn = new WebSocket('ws://localhost:8080');
+        var conn = new WebSocket('ws://localhost:8085');
     } catch (e) {
         throw e;
     }
@@ -54,7 +57,7 @@ var startMonitoring = function() {
     conn.onopen = function(e) {
         console.log('Connected to server:', conn);
         // Sends a request to the serial port to fetch the arduino mode
-        conn.send("GETMODE");
+        // conn.send("GETMODE");
     }
 
     conn.onerror = function(e) {
@@ -75,27 +78,31 @@ var startMonitoring = function() {
 
     conn.onmessage = function(e) {
         var message = e.data;
-        if (message.startsWith("ARDUINO")) {
-            if (message == "ARDUINOMODERAW") {
-                $("#startMonBtn").html("Stop Monitoring");
+        // if (message.startsWith("ARDUINO")) {
+        //     if (message == "ARDUINOMODERAW") {
+        //         $("#startMonBtn").html("Stop Monitoring");
                 monitoringIsAlive = true;
                 $(".line").css("stroke", "red");
                 setArduinoStatus("CONNECTED", "Raw");
-            } else if (message == "ARDUINOMODECALIB") {
-                conn.send("SETMODERAW");
-            } else if (message == "ARDUINOMODEUSER") {
-                conn.send("SETMODERAW");
-            }
-        } else {
+            // } else if (message == "ARDUINOMODECALIB") {
+            //     conn.send("SETMODERAW");
+            // } else if (message == "ARDUINOMODEUSER") {
+            //     conn.send("SETMODERAW");
+            // }
+        // } else {
             if (monitoringIsAlive) {
                 var partsOfStr = message.split(',');
                 if (monitoringIsAlive && (partsOfStr.length == 3)) {
                     shiftUpdateGraph(partsOfStr[0], partsOfStr[1], partsOfStr[2]);
+                    // vals[0] = partsOfStr[0];
+                    // vals[1] = partsOfStr[1];
+                    // vals[2] = partsOfStr[2];
+
                 } else {
                     shiftUpdateGraph(0, 0, 0);
                 }
             }
-        }
+        // }
     }
 }
 

@@ -19,8 +19,12 @@ class CreateDeviceUserTable extends Migration
             $table->integer('pivotuser_id')->unsigned();
             $table->integer('pivotdevice_id');
             $table->timestamps();
-            $table->foreign('pivotuser_id')->references('id')->on('users');
-            $table->foreign('pivotdevice_id')->references('id')->on('devices');
+            $table->foreign('pivotuser_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('pivotdevice_id')->references('id')->on('devices')->onUpdate('cascade')->onDelete('cascade');
+
+            // Adding unique index and prvent duplicate assignment o same device to user
+            $table->unique( array('pivotuser_id','pivotdevice_id'));
+
         });
     }
 

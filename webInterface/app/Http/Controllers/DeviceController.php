@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Device;
+use App\Sample;
+use App\DeviceUser;
 use App\Http\Requests;
 use App\Repositories\DeviceRepository;
 
@@ -104,6 +106,62 @@ class DeviceController extends Controller
 
         $userdevices = $request->user()->devices;
         return response()->json(view('database.devices', ['devicelist' => $userdevices])->render(), 200);
+    }
+
+    /**
+     * Retrieves the samples associated with the current connected device
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getSamples(Request $request)
+    {
+
+        // $sample = new Sample;
+
+        // $sample->sample_id = "00001";
+        // $sample->gestureName = "Undefined";
+        // $sample->sampleData = "XXXXXX";
+        // $sample->pair_id = 1;
+
+        // $sample->save();
+
+        $vals = DeviceUser::find(1)->samples;
+
+        // $sams = $vals->samples();
+
+        // echo (print_r($sams));
+
+        foreach ($vals as $val) {
+            //
+
+            echo $val;
+        }
+
+        return "Done";
+    }
+
+    // Creates a sample 
+    public function createSample(Request $request)
+    {
+        // Request should contain the sampledata, pairid, gesturename
+        $this->validate($request, [
+            'pair_id' => 'exists:device_user,pair_id',
+            'gestureName' => 'required|max:255',
+            'sampleData' => 'required',
+        ]);
+
+        $sample = new Sample;
+        $sample->gestureName = $request->gestureName;
+        $sample->sampleData = $request->sampleData;
+        $sample->pair_id = $request->pair_id;
+        $sample->save();
+
+        return response->json([
+                                'name' => 'Abigail',
+                                'state' => 'CA'
+                            ]);
+
     }
 
     /**

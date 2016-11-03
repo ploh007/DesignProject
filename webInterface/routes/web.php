@@ -55,4 +55,14 @@ Route::post('/database-show', 'DeviceController@showDevices');
 Route::post('/database-pair', 'DeviceController@pairDevice');
 Route::post('/database-unpair', 'DeviceController@unpairDevice');
 
+Route::get('/loadsamples', "DeviceController@getSamples");
+Route::post('/loadsamples2', "DeviceController@saveSample");
+
+
+Route::get('/samples', function () {
+    return view('database.sampleAdd');
+})->middleware('auth');
+
+Route::post('/samples-add', "DeviceController@createSample");
+
 Auth::routes();

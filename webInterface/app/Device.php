@@ -19,10 +19,4 @@ class Device extends Model
     {
         return $this->belongsToMany('App\User', 'device_user', 'pivotdevice_id', 'pivotuser_id');
     }
-
-    public function samples()
-    {
-        return $this->hasMany('App\Sample');
-    }
-
 }

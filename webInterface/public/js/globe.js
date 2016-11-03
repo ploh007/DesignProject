@@ -172,7 +172,7 @@ var startGlobeMonitoring = function(){
 
 
          // Create a Websocket
-        var conn = new WebSocket('ws://localhost:8080');
+        var conn = new WebSocket('ws://localhost:8085');
 
         conn.onopen = function(e) {
             console.log('Connected to server:', conn);
@@ -205,26 +205,26 @@ var startGlobeMonitoring = function(){
             
             var message = e.data;
             
-            if(message.startsWith("ARDUINO")){
-                if(message == "ARDUINOMODERAW"){
-                    $("#startGlobeBtn").html("Stop Discovering");
+            // if(message.startsWith("ARDUINO")){
+            //     if(message == "ARDUINOMODERAW"){
+            //         $("#startGlobeBtn").html("Stop Discovering");
                     globeMonitoring = true;
-                    $(".line").css("stroke", "red");
+                    // $(".line").css("stroke", "red");
                     setArduinoStatus("CONNECTED", "RAW");
-                } else if(message == "ARDUINOMODECALIB"){
-                    conn.send("SETMODERAW");
-                } else if(message == "ARDUINOMODEUSER"){
-                    conn.send("SETMODERAW");
-                }
-            } else {
+            //     } else if(message == "ARDUINOMODECALIB"){
+            //         conn.send("SETMODERAW");
+            //     } else if(message == "ARDUINOMODEUSER"){
+            //         conn.send("SETMODERAW");
+            //     }
+            // } else {
 
                 if (globeMonitoring){
 
                     var partsOfStr = message.split(',');
                     if(globeMonitoring && (partsOfStr.length == 3)){
 
-                        var dx = partsOfStr[2]/15;
-                        var dy = partsOfStr[0]/15;
+                        var dx = partsOfStr[2]/3;
+                        var dy = partsOfStr[0]/3;
                         // var dz = partsOfStr[2]*2;
                         var rotation = projection.rotate();
                         var radius = projection.scale();
@@ -245,7 +245,7 @@ var startGlobeMonitoring = function(){
                         redraw();
 
                     }
-                }
+                // }
             }
         }
 

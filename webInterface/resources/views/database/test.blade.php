@@ -72,9 +72,9 @@
                 </div>
                 <div class="col-md-4">
                     <h4>Device ID Pool</h4>
-                    <select class="form-control" size="7" name="devices-list">
+                    <select class="form-control" size="7" name="devices-list" id="device-pool">
                         @foreach ($devices as $device)
-                        <option value={{ $device->id }}>GestureDevice_{{ $device->id }}</option>
+                            <option value={{ $device->id }}>GestureDevice_{{ $device->id }}</option>
                         @endforeach
                     </select>
                 </div>

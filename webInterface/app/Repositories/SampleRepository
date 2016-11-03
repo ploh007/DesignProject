@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Sample;
+
+class SampleRepository
+{
+
+    /**
+     * Get all of the samples from the database
+     *
+     * @return Collection
+     */
+    public function getAll()
+    {
+        return Sample::all();
+    }
+
+    /**
+     * Get all of the samples with the corresponding pair id.
+     *
+     * @return Collection
+     */
+    public function getUserSamples($pairId)
+    {
+        return Sample::where('pair_id', $pairId)
+                    ->orderBy('gestureName', 'asc')
+                    ->get();
+    }
+
+}

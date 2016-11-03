@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Sample extends Model
@@ -12,11 +13,11 @@ class Sample extends Model
      * @var array
      */
     protected $fillable = [
-        'sample_id', 'gestureName', 'sampleData',
+        'sample_id', 'gestureName', 'sampleData', 'pair_id'
     ];
 
     public function device()
     {
-        return $this->belongsTo('App\Device');
+        return $this->belongsTo('App\DeviceUser', 'pair_id');
     }
 }

@@ -10,7 +10,7 @@
 	    new WsServer(
 	        new WebSocket()
 	    )
-	    , 8080
+	    , 8085
 	);
 
 	$server->run();

@@ -15,12 +15,18 @@ class CreateSamplesTable extends Migration
     {
         Schema::create('samples', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('sample_id');
+
+            $table->increments('sample_id');
             $table->integer('pair_id')->unsigned();
+            $table->timestamps();
             $table->string('gestureName');
             $table->mediumtext('sampleData');
-            $table->foreign('pair_id')->references('pair_id')->on('device_user');
-            $table->primary('sample_id');
+            
+            /* Indexes */
+            $table->foreign('pair_id')->references('pair_id')->on('device_user')
+                  ->onDelete('cascade')->onUpdate('cascade');
+
+            // $table->primary('sample_id');
         });
     }
 
