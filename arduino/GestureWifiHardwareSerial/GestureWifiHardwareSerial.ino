@@ -1,19 +1,31 @@
 //Add the SPI library so we can communicate with the ADXL345 sensor
 #include <SPI.h>
 
+#include "WiFiEsp.h"
+
+char ssid[] = "gesture1";            // your network SSID (name)
+char pass[] = "gesture1";        // your network password
+int status = WL_IDLE_STATUS;     // the Wifi radio's status
+
+char server[] = "192.168.137.1";
+int port = 8080;
+
+// Initialize the Ethernet client object
+WiFiEspClient client;
+
 //Assign the Chip Select signal to pin 10.
 int CS=10;
 
 //This is a list of some of the registers available on the ADXL345.
 //To learn more about these and the rest of the registers on the ADXL345, read the datasheet!
-char POWER_CTL = 0x2D;	//Power Control Register
+char POWER_CTL = 0x2D;  //Power Control Register
 char DATA_FORMAT = 0x31;
-char DATAX0 = 0x32;	//X-Axis Data 0
-char DATAX1 = 0x33;	//X-Axis Data 1
-char DATAY0 = 0x34;	//Y-Axis Data 0
-char DATAY1 = 0x35;	//Y-Axis Data 1
-char DATAZ0 = 0x36;	//Z-Axis Data 0
-char DATAZ1 = 0x37;	//Z-Axis Data 1
+char DATAX0 = 0x32; //X-Axis Data 0
+char DATAX1 = 0x33; //X-Axis Data 1
+char DATAY0 = 0x34; //Y-Axis Data 0
+char DATAY1 = 0x35; //Y-Axis Data 1
+char DATAZ0 = 0x36; //Z-Axis Data 0
+char DATAZ1 = 0x37; //Z-Axis Data 1
 
 //This buffer will hold values read from the ADXL345 registers.
 unsigned char values[10];
@@ -26,28 +38,52 @@ int dataBuffer [3][64];
 int bufferHead = 0;
 
 int BUFFER_SIZE = 64;
-int THRESHOLD = 40;
-int CALIBRATION_THRESHOLD = 30;
+int THRESHOLD = 100;
+int CALIBRATION_THRESHOLD = 40;
 
 int WAITING = 0;
 int CAPTURING = 1;
-int CALIBRATION = 0;
-int NOT_CALIBRATION = 1;
 
-int calibrationState = 1;
-int state = 0;
+int CALIBRATION_MODE = 0;
+int USER_MODE = 1;
+int RAW_DATA_MODE = 2;
+
+int tooLowCounter;
+
+int mode = 2;
+int captureState = 0;
 int counter = 0;
-
-boolean alreadySent = false;
 
 
 void setup(){
+
+  //********* BEGIN WIFI SETUP ************
+  // initialize Hardware Serial for ESP
+  Serial.begin(115200);
+  // initialize ESP module
+  WiFi.init(&Serial);
+
+  // check for the presence of the shield
+  if (WiFi.status() == WL_NO_SHIELD) {
+    // don't continue
+    while (true);
+  }
+
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED) {
+    // Connect to WPA/WPA2 network
+    status = WiFi.begin(ssid, pass);
+  }
+
+  if(!client.connect(server, port)) {
+    while(true);
+  }
+  
+  //********** BEGIN ACCELEROMETER SETUP *************
   //Initiate an SPI communication instance.
   SPI.begin();
   //Configure the SPI connection for the ADXL345.
   SPI.setDataMode(SPI_MODE3);
-  //Create a serial connection to display the data on the terminal.
-  Serial.begin(115200);
 
   //Set up the Chip Select pin to be an output from the Arduino.
   pinMode(CS, OUTPUT);
@@ -60,7 +96,8 @@ void setup(){
   writeRegister(POWER_CTL, 0x08);  //Measurement mode
 }
 
-void loop(){
+void loop() {
+  long startTime = millis();
   //Reading 6 bytes of data starting at register DATAX0 will retrieve the x,y and z acceleration values from the ADXL345.
   //The results of the read operation will get stored to the values[] buffer.
   readRegister(DATAX0, 6, values);
@@ -73,13 +110,69 @@ void loop(){
   //The Z value is stored in values[4] and values[5].
   z = ((int)values[5]<<8)|(int)values[4];
 
-  Serial.print(x);
-  Serial.print(",");
-  Serial.print(y);
-  Serial.print(",");
-  Serial.println(z);
+  dataBuffer[0][bufferHead] = x;
+  dataBuffer[1][bufferHead] = y;
+  dataBuffer[2][bufferHead] = z;
   
-  delay(20);
+  float jerkMagnitude = getJerkMagnitude();
+  
+  if(mode == CALIBRATION_MODE) {
+    
+    if(captureState == WAITING && jerkMagnitude > THRESHOLD) {
+      tooLowCounter = 0;
+      captureState = CAPTURING;
+      counter = 31;
+      getJerkVector(capturedJerkVector);
+    }else if(captureState == CAPTURING) {
+      tooLowCounter = 0;
+      if(counter <= 0) {
+        captureState = WAITING;
+        printDataString();
+      }
+      counter--;
+    }else if(jerkMagnitude < THRESHOLD && jerkMagnitude > CALIBRATION_THRESHOLD) {
+      tooLowCounter = 1;
+    }
+    
+    if(tooLowCounter > 0 && tooLowCounter <= 32) {
+      tooLowCounter++;
+    }else if(tooLowCounter > 32) {
+      client.println("TOOLOW");
+      tooLowCounter = 0;
+    }
+    
+  }else if(mode == USER_MODE) {
+    
+    if(captureState == WAITING && jerkMagnitude > THRESHOLD) {
+      captureState = CAPTURING;
+      counter = 31;
+      getJerkVector(capturedJerkVector);
+    }else if(captureState == CAPTURING) {
+      if(counter <= 0) {
+        captureState = WAITING;
+        printDataString();
+      }
+      counter--;
+    }
+    
+  }else if(mode == RAW_DATA_MODE) {
+    client.println(String(x) + "," + String(y) + "," + String(z));
+  }
+  
+  updateBufferHead();
+  customSerialEvent();
+
+  //calculate time taken to collect & send samples
+  long endTime = millis();
+  long timeDelta = endTime - startTime;
+
+  //if it took less than 20 ms, delay so that loop takes 20 ms
+  //if it too longer than 20 ms, dont delay to ensure that the loop repeats
+  //as fast as possible (mainly for Raw data mode)
+  if(timeDelta < 20) {
+    delay(20 - timeDelta);
+  }
+  
 }
 
 void updateBufferHead() {
@@ -118,13 +211,21 @@ float getJerkMagnitude() {
   return jerkMagnitude;
 }
 
-void serialEvent() {
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
+void customSerialEvent() {
+  while (client.available()) {
+    uint8_t buf[5];
+    client.read(buf, 5);
+    char inChar = buf[0];
+
     if(inChar == 'C') {
-      calibrationState = CALIBRATION;
-    }else if(inChar == 'N') {
-      calibrationState = NOT_CALIBRATION;
+      mode = CALIBRATION_MODE;
+    }else if(inChar == 'U') {
+      mode = USER_MODE;
+    }else if(inChar == 'R') {
+      mode = RAW_DATA_MODE;
+    } else if(inChar == 'P') {
+      // Request ping for arduino device controller ID
+      client.println("101");
     }
   }
 }
@@ -147,9 +248,9 @@ void printDataString() {
       } 
       
     }
-    Serial.println(dataString);
+    client.println(dataString);
   }
-  Serial.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
+  client.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 
 //This function will write a value to a register on the ADXL345.
