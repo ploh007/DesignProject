@@ -6,6 +6,22 @@
     use Ratchet\ConnectionInterface;
 
     class WebSocket implements MessageComponentInterface {
+        
+        // $address = '192.168.137.1';
+        // $port = 8080;
+
+        // if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
+        //     echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
+        // }
+
+        // if (socket_bind($sock, $address, $port) === false) {
+        //     echo "socket_bind() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
+        // }
+
+        // if (socket_listen($sock, 5) === false) {
+        //     echo "socket_listen() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
+        // }
+
         protected $clients;
 
         // Constructor
@@ -26,12 +42,12 @@
             echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
                 , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
+
             foreach ($this->clients as $key => $client) {
                 // if ($from !== $client) {
                     // $json = json_decode($msg,true);
                     // $json['sender'] = $from->resourceId;
                     $client->send($msg);
-                // }
             }
 
             $client = $this->clients[$from->resourceId];

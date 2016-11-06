@@ -145,6 +145,27 @@ class DeviceController extends Controller
     public function createSample(Request $request)
     {
         // Request should contain the sampledata, pairid, gesturename
+        // $this->validate($request, [
+        //     'pair_id' => 'exists:device_user,pair_id',
+        //     'gestureName' => 'required|max:255',
+        //     'sampleData' => 'required',
+        // ]);
+
+        $sample = new Sample;
+        $sample->gestureName = $request->gestureName;
+        $sample->sampleData = $request->sampleData;
+        $sample->pair_id = $request->pair_id;
+        $sample->save();
+
+        return response()->json([
+                                'data' => ' Some data response ',
+                            ], 200);
+
+    }
+
+    public function addCalibrationSample(Request $request)
+    {
+        // Request should contain the sampledata, pairid, gesturename
         $this->validate($request, [
             'pair_id' => 'exists:device_user,pair_id',
             'gestureName' => 'required|max:255',
@@ -157,11 +178,9 @@ class DeviceController extends Controller
         $sample->pair_id = $request->pair_id;
         $sample->save();
 
-        return response->json([
-                                'name' => 'Abigail',
-                                'state' => 'CA'
-                            ]);
-
+        return response()->json([
+                                'data' => ' Some data response ',
+                            ], 200);
     }
 
     /**

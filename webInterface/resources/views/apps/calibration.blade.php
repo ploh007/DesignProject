@@ -25,6 +25,7 @@
         </div>
     </div>
 </body>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="./js/calibration.js"></script>
 <script src="./js/calibrationFSM.js"></script>
 @endsection

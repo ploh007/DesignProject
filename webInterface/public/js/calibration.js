@@ -106,6 +106,8 @@ var updateCalibrationStatus = function(calibStatus) {
     } else {
         setCalibrationNotification("#DADFE1", "#BDC3C7", "<span class='glyphicon glyphicon-hourglass'></span>  Pending Input");
     }
+
+    showCalibrationNotification();
 }
 
 /**
@@ -170,19 +172,19 @@ var startCalibration = function() {
     var StateMachine;
 
     // Create a Websocket
-    var conn = new WebSocket('ws://localhost:8080');
+    var conn = new WebSocket('ws://localhost:8085');
 
     /**
     * Open the Websocket connection with the Server
     */
     conn.onopen = function(e) {
 
-        if (DEBUGMODE) {
+        // if (DEBUGMODE) {
             console.log('Connected to server:', conn);
-        }
+        // }
 
         // Fetch the mode in which the arduino is in
-        conn.send("GETMODE");
+        // conn.send("GETMODE");
     }
 
     /**
@@ -191,10 +193,10 @@ var startCalibration = function() {
     conn.onerror = function(e) {
 
         // Couldnt connect to the server, display error
-        if (DEBUGMODE) {
-            console.log('Error: Could not connect to server.');
-            console.log(e);
-        }
+        // if (DEBUGMODE) {
+        //     console.log('Error: Could not connect to server.');
+        //     console.log(e);
+        // }
 
         calibrationStarted = false;
 
@@ -217,9 +219,9 @@ var startCalibration = function() {
         conn.send("SETMODEUSER");
         setArduinoStatus("DISCONNECTED", "Idle");
 
-        if (DEBUGMODE) {
-            console.log('Connection closed');
-        }
+        // if (DEBUGMODE) {
+        //     console.log('Connection closed');
+        // }
     }
 
     /**
@@ -228,24 +230,37 @@ var startCalibration = function() {
     *   and ensures the arduino is operating in the calibration state. 
     * - Begins calibration sequence once initialized.
     */
+
+    var count = 4;
+    var data = ''
+
     conn.onmessage = function(e) {
         
         var message = e.data;
 
-        if (message.startsWith("ARDUINO")) {
+        // if (message.startsWith("ARDUINO")) {
             if (calibrationStarted) {
 
-                if (message == "ARDUINOCALIBSUCCESS") {
-                    updateCalibrationStatus(0);
-                    conn.send(StateMachine.getState());
-                } else if (message == "ARDUINOCALIBFAIL") {
+                if (message == "TOOLOW") {
                     updateCalibrationStatus(1);
+                } else {
+                    if (count == 0) {
+                        addSample(data, StateMachine.getState());
+                        updateCalibrationStatus(0);
+                        // conn.send(StateMachine.getState());
+                        count = 4;
+                        data = '';
+                    } else {
+                        data += (message + ';')
+                        count = count - 1;
+
+                    }
                 } 
 
                 StateMachine.begin();
-
             } else {
-                if (message == "ARDUINOMODECALIB") {
+            // } else {
+                if (message == "AR_MC") {
 
                     calibrationStarted = true;
                     
@@ -256,10 +271,63 @@ var startCalibration = function() {
                     StateMachine = new CalibrationFSM();
                     StateMachine.begin();
 
-                } else if (message == "ARDUINOMODERAW" || message == "ARDUINOMODEUSER") {
-                    conn.send("SETMODECALIB");
+                // } else if (message == "ARDUINOMODERAW" || message == "ARDUINOMODEUSER") {
+                //     conn.send("SETMODECALIB");
                 }
             }
-        }
+        // }
     }
+
+
+    function addSample($sample, $gesture) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        $(document).ajaxStart(function() {
+            $('#loading').fadeIn("slow");
+        });
+
+        $(document).ajaxStop(function() {
+            $('#loading').fadeOut("slow");
+        });
+
+        var $gestureName = '';
+
+        if($gesture == "CALIBUP"){
+            $gestureName = "Up";
+        } else if ($gesture == "CALIBDOWN"){
+            $gestureName = "Down";
+        } else if ($gesture == "CALIBLEFT"){
+            $gestureName = "Left";
+        } else if ($gesture == "CALIBRIGHT"){
+            $gestureName = "Right";
+        }
+
+        var formData = {
+            pair_id: '5',
+            gestureName: $gestureName,
+            sampleData: $sample,
+        }
+
+        console.log(formData);
+
+        $.ajax({
+            type: 'POST',
+            url: "./samples-add",
+            data: formData,
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(data, responseText) {
+                console.log(data.responseJSON);
+                console.log(responseText);
+            }
+        });
+    };
+
 }

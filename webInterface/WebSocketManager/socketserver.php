@@ -1,8 +1,8 @@
 <?php
 
-
 require_once 'WebsocketClient.php';
 
+$mode = "RAWDATA";
 
 error_reporting(E_ALL);
 
@@ -16,6 +16,8 @@ ob_implicit_flush();
 $address = '192.168.137.1';
 $port = 8080;
 
+$sock = null;
+
 if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
     echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
 }
@@ -27,6 +29,119 @@ if (socket_bind($sock, $address, $port) === false) {
 if (socket_listen($sock, 5) === false) {
     echo "socket_listen() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
 }
+
+// Create an instance of the WebSocket Client
+
+
+$msgsock = socket_accept($sock);
+
+class My extends Thread {
+
+    protected $msgsock;
+
+    public function __construct($msgsock){
+        $this->msgsock = $msgsock;
+    }
+
+    public function run() {
+
+        // echo "Starting Thread 1";
+
+        while(true){
+
+            $handle = fopen ("php://stdin","r");
+            $line = fgets($handle);
+
+            socket_write($this->msgsock, $line, strlen($line));
+
+            // if (trim($line) == 'U'){
+            //     Echo "Receeived";
+            //     socket_write($this->msgsock, 'U', strlen('U'));
+
+            //     $buf2 = socket_read($this->msgsock, 2048, PHP_NORMAL_READ);
+
+            //     $flag = true;
+
+
+            //     while($flag){
+            //         if($buf2 == 'AR_MU'){
+            //             socket_write($this->msgsock, 'U', strlen('U'));
+            //         } else {
+            //             $flag = false;
+            //         }
+            //     }
+
+            // } 
+
+            // else if (trim($line) == 'R'){
+            //     Echo "Receeived";
+            //     socket_write($this->msgsock, 'R', strlen('R'));
+            // } 
+        }
+    }
+}
+
+
+class My2 extends Thread {
+
+    protected $msgsock;
+
+    public function __construct($msgsock){
+        $this->msgsock = $msgsock;
+
+    }
+
+    public function run() {
+
+        $deviceWSC = new WebsocketClient;
+        $deviceWSC->connect('192.168.137.1', 8085, '/demo', 'foo.lh');
+
+        // echo "Starting Thread 2";
+            /* Send instructions. */
+            // $msg = 'U';
+            // socket_write($msgsock, $msg, strlen($msg));
+            // echo "Writing $msg to $msgsock";
+
+            do {
+
+                if (false === ($buf = socket_read($this->msgsock, 2048, PHP_NORMAL_READ))) {
+                    echo "socket_read() failed: reason: " . socket_strerror(socket_last_error($this->msgsock)) . "\n";
+                    break 2;
+                }
+                if (!$buf = trim($buf)) {
+                    continue;
+                }
+                if ($buf == 'quit') {
+                    break;
+                }
+                if ($buf == 'shutdown') {
+                    socket_close($this->msgsock);
+                    break 2;
+                }
+
+                // Send Message over network connection back to Websocket port
+                // echo "THREAD BUFFER";
+                $deviceWSC->sendData($buf);
+                
+                // echo "$buf\n";
+
+            } while (true);
+
+            socket_close($this->msgsock);
+
+
+        // socket_close($this->socket );
+    }
+}
+
+
+$my = new My($msgsock);
+$my->start();
+
+$my2 = new My2($msgsock);
+$my2->start();
+
+
 
 // for($i = 0; $i < $testClients; $i++)
 // {
@@ -45,60 +160,3 @@ if (socket_listen($sock, 5) === false) {
 //     usleep(5000);
 // }
 // usleep(5000);
-
-
-// Create an instance of the WebSocket Client
-$deviceWSC = new WebsocketClient;
-$deviceWSC->connect('192.168.137.1', 8085, '/demo', 'foo.lh');
-// $deviceInitData = json_encode(array(
-//     'data' => 'DEVICE_001'
-// ));
-$deviceWSC->sendData('DEVICE_001');
-
-do {
-    if (($msgsock = socket_accept($sock)) === false) {
-        echo "socket_accept() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
-        break;
-    }
-    /* Send instructions. */
-    $msg = 'U';
-    socket_write($msgsock, $msg, strlen($msg));
-
-    echo "Writing $msg to $msgsock";
-
-    do {
-        if (false === ($buf = socket_read($msgsock, 2048, PHP_NORMAL_READ))) {
-            echo "socket_read() failed: reason: " . socket_strerror(socket_last_error($msgsock)) . "\n";
-            break 2;
-        }
-        if (!$buf = trim($buf)) {
-            continue;
-        }
-        if ($buf == 'quit') {
-            break;
-        }
-        if ($buf == 'shutdown') {
-            socket_close($msgsock);
-            break 2;
-        }
-        // $talkback = "U";
-
-        // echo "$msgsock : $buf \n";
-
-        // for($i=0; $i<20; $i++){
-            // $msg = 'U';
-            // socket_write($msgsock, $msg, strlen($msg));
-            // echo "Writing $msg to $msgsock";
-        // }
-
-        // Send Message over network connection back to Websocket port
-        $deviceWSC->sendData($buf);
-
-        // socket_write($msgsock, $talkback, strlen($talkback));
-        // echo "$buf\n";
-    } while (true);
-    socket_close($msgsock);
-} while (true);
-
-socket_close($sock);
-?>

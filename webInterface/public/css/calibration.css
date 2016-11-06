@@ -53,6 +53,28 @@
     transform:  rotate(90deg);*/
 }
 
+.slideDown{
+    animation-name: slideDown;
+    -webkit-animation-name: slideDown;  
+
+    animation-duration: 1s; 
+    -webkit-animation-duration: 1s;
+
+    animation-timing-function: ease;    
+    -webkit-animation-timing-function: ease;    
+
+    visibility: visible !important;                     
+}
+
+@-webkit-keyframes slideDown {
+    0%, 100% { -webkit-transform: translateY(-50px); }
+    10%, 90% { -webkit-transform: translateY(0px); }
+}
+@-moz-keyframes slideDown {
+    0%, 100% { -moz-transform: translateY(-50px); }
+    10%, 90% { -moz-transform: translateY(0px); }
+}
+
 /**
  * CSS Style for Calibration Peek-In Notification
  */
@@ -79,6 +101,10 @@
     -o-animation: slideDown 1.5s 0.1s 1 ease forwards;
     transform: translateY(-50px);
     animation: slideDown 1.5s 0.1s 1 ease forwards;
+     /*-webkit-transform: translateY(-50px);*/
+    /*-webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;*/
+    /*-moz-transform:    translateY(-50px);*/
+    /*-moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;*/
 }
 
 /**
