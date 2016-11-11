@@ -5,24 +5,32 @@ The purpose of this project was to develop a system that can capture and analyze
 This system was constructed to improve upon conventional methods of controlling devices by making the experience more natural for the user. 
 
 #### The system can be broken down into 2 Core Components
-+ Web Application			// Contains entire application to handle users, devices and applications
-	+ Written using PHP (PEAR Coding Standards Adhered To)
++ Web Application			
+	+ Written using PHP (PSR Coding Standards Adhered To)
 	+ Front-end powered by HTML, CSS and JS
-
-+ Arduino Program			// Contains the codebase that is to be deployed to an arduino
++ Arduino Program
 
 ### Setup
 + Web Application System Setup Instructions
-+ Hardware System Setup Instructions
+	+ Ensure that the following programs are installed on the development Machine
+		+ Composer (https://getcomposer.org/)
+		+ WAMP 3.0.4 (http://www.wampserver.com/en/)
+			+ PHP 5.6.19 & 7.0.4
+			+ Apache 2.4.18
+			+ MySQL 5.7.11
 
-### Usage
-
-### Contributing
+#### Environment Setup
+1. Clone the git repository into your WAMP www folder (i.e. `E:\wamp64\www\`) by issuing the following command 'git clone https://github.com/ploh007/DesignProject.git'.
+2. Once completed, navigate to the webInterface folder (i.e. 'cd E:\wamp64\www\design_project\webInterface').
+3. Open a command prompt window and run the command 'composer install'.
+4. Start wampserver and navigate to the following address using a web browser ('http://localhost/design_project/webInterface/public/').
+5. You should be directed to the landing page of the Gesture Notification System.
 
 ### History
-In September 2015, this project started off as a brainstorming idea that we had and decided to run with for a design project for our fourth year project. 
+In September 2015, this project started off as a brainstorming idea that we had and decided to run with for a design project for our fourth year Computer Engineering Porject
 
 ### Constructed by
 [Jordan Hatcher](https://jordan-hatcher.com/) && [Paul Loh](http://www.paulloh.com)
 
 ### Project License
+MIT License

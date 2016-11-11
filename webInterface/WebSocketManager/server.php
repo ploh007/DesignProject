@@ -13,6 +13,9 @@
 	    , 8085
 	);
 
+	echo "Server has started!";
+
 	$server->run();
 
-	echo "Server has started!";
+	echo "Server running";
+

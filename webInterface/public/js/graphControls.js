@@ -57,7 +57,7 @@ var startMonitoring = function() {
     conn.onopen = function(e) {
         console.log('Connected to server:', conn);
         // Sends a request to the serial port to fetch the arduino mode
-        // conn.send("GETMODE");
+        conn.send("GETMODE");
     }
 
     conn.onerror = function(e) {
@@ -77,6 +77,8 @@ var startMonitoring = function() {
     }
 
     conn.onmessage = function(e) {
+        // conn.send("HELLO");
+        console.log(e.data);
         var message = e.data;
         // if (message.startsWith("ARDUINO")) {
         //     if (message == "ARDUINOMODERAW") {

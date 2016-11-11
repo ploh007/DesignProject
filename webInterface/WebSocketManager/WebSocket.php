@@ -26,6 +26,7 @@
 
         // Constructor
         public function __construct() {
+            echo "Hello";
             $this->clients = array();
         }
 
@@ -45,9 +46,11 @@
 
             foreach ($this->clients as $key => $client) {
                 // if ($from !== $client) {
-                    // $json = json_decode($msg,true);
-                    // $json['sender'] = $from->resourceId;
-                    $client->send($msg);
+                // $json = json_decode($msg,true);
+                // $json['sender'] = $from->resourceId;
+                $client->send($msg);
+
+
             }
 
             $client = $this->clients[$from->resourceId];
@@ -64,6 +67,20 @@
         public function onError(ConnectionInterface $conn, \Exception $e) {
             echo "An error has occurred: {$e->getMessage()}\n";
             $conn->close();
+        }
+
+        public function send() {
+
+            echo "Number of Clients".count($this->clients);
+
+            foreach ($this->clients as $key => $client) {
+                // if ($from !== $client) {
+                // $json = json_decode($msg,true);
+                // $json['sender'] = $from->resourceId;
+                $client->send("Test");
+            }
+            echo "Sent Message";
+            
         }
 
     }
