@@ -23,7 +23,7 @@ var hideCalibrationNotification = function() {
 var showCalibrationNotification = function() {
     $("#calibration-notification").css("display", "block");
     $('#calibration-notification').show();
-}   
+}
 
 /**
  * Set Calibration Notifier Contextual Information
@@ -172,24 +172,26 @@ var startCalibration = function() {
     var StateMachine;
 
     // Create a Websocket
-    var conn = new WebSocket('ws://localhost:8085');
+    var conn = new WebSocket('ws://192.168.137.1:8080');
 
     /**
-    * Open the Websocket connection with the Server
-    */
+     * Open the Websocket connection with the Server
+     */
     conn.onopen = function(e) {
 
         // if (DEBUGMODE) {
-            console.log('Connected to server:', conn);
+        console.log('Connected to server:', conn);
         // }
 
         // Fetch the mode in which the arduino is in
         // conn.send("GETMODE");
+        conn.send("C");
+        // conn.send("M");
     }
 
     /**
-    * Error reached on the Websocket connection handler
-    */
+     * Error reached on the Websocket connection handler
+     */
     conn.onerror = function(e) {
 
         // Couldnt connect to the server, display error
@@ -211,8 +213,8 @@ var startCalibration = function() {
     }
 
     /**
-    * Close the websocket connection
-    */
+     * Close the websocket connection
+     */
     conn.onclose = function(e) {
 
         // Set the Arduino to the User Mode
@@ -225,17 +227,16 @@ var startCalibration = function() {
     }
 
     /**
-    * Handles the websocket messages
-    * - Sets upcommunication with the arduino board and 
-    *   and ensures the arduino is operating in the calibration state. 
-    * - Begins calibration sequence once initialized.
-    */
+     * Handles the websocket messages
+     * - Sets upcommunication with the arduino board and 
+     *   and ensures the arduino is operating in the calibration state. 
+     * - Begins calibration sequence once initialized.
+     */
 
-    var count = 4;
     var data = ''
 
     conn.onmessage = function(e) {
-        
+
         var message = e.data;
 
         // if (message.startsWith("ARDUINO")) {
@@ -244,35 +245,24 @@ var startCalibration = function() {
                 if (message == "TOOLOW") {
                     updateCalibrationStatus(1);
                 } else {
-                    if (count == 0) {
-                        addSample(data, StateMachine.getState());
-                        updateCalibrationStatus(0);
-                        // conn.send(StateMachine.getState());
-                        count = 4;
-                        data = '';
-                    } else {
-                        data += (message + ';')
-                        count = count - 1;
-
-                    }
-                } 
+                    addSample(data, StateMachine.getState());
+                    updateCalibrationStatus(0);
+                }
 
                 StateMachine.begin();
             } else {
-            // } else {
-                if (message == "AR_MC") {
 
+                if (message.includes("AR_MC")) {
                     calibrationStarted = true;
-                    
+
                     $("#calibration-btn").prop("disabled", true);
                     setArduinoStatus("CONNECTED", "Calib");
-                  
-                    // Initialize State Machine and Begin
-                    StateMachine = new CalibrationFSM();
-                    StateMachine.begin();
 
-                // } else if (message == "ARDUINOMODERAW" || message == "ARDUINOMODEUSER") {
-                //     conn.send("SETMODECALIB");
+                    StateMachine = new CalibrationFSM(); // Initialize State Machine and Begin
+                    StateMachine.begin(); // Advances to Start Calibration State
+                } else if (message.includes("AR_MU") || message.includes("AR_MR")) {
+                    conn.send("C");
+                    conn.send("M");
                 }
             }
         // }
@@ -297,13 +287,13 @@ var startCalibration = function() {
 
         var $gestureName = '';
 
-        if($gesture == "CALIBUP"){
+        if ($gesture == "CALIBUP") {
             $gestureName = "Up";
-        } else if ($gesture == "CALIBDOWN"){
+        } else if ($gesture == "CALIBDOWN") {
             $gestureName = "Down";
-        } else if ($gesture == "CALIBLEFT"){
+        } else if ($gesture == "CALIBLEFT") {
             $gestureName = "Left";
-        } else if ($gesture == "CALIBRIGHT"){
+        } else if ($gesture == "CALIBRIGHT") {
             $gestureName = "Right";
         }
 

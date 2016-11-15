@@ -43,7 +43,7 @@ var startMonitoring = function() {
 
     // Create a Websocket
     try {
-        var conn = new WebSocket('ws://localhost:8085');
+        var conn = new WebSocket('ws://192.168.137.1:8080');
     } catch (e) {
         throw e;
     }
@@ -57,7 +57,7 @@ var startMonitoring = function() {
     conn.onopen = function(e) {
         console.log('Connected to server:', conn);
         // Sends a request to the serial port to fetch the arduino mode
-        conn.send("GETMODE");
+        conn.send("R");
     }
 
     conn.onerror = function(e) {
@@ -95,7 +95,7 @@ var startMonitoring = function() {
             if (monitoringIsAlive) {
                 var partsOfStr = message.split(',');
                 if (monitoringIsAlive && (partsOfStr.length == 3)) {
-                    shiftUpdateGraph(partsOfStr[0], partsOfStr[1], partsOfStr[2]);
+                    shiftUpdateGraph(parseInt(partsOfStr[0]), parseInt(partsOfStr[1]), parseInt(partsOfStr[2]));
                     // vals[0] = partsOfStr[0];
                     // vals[1] = partsOfStr[1];
                     // vals[2] = partsOfStr[2];
@@ -107,6 +107,8 @@ var startMonitoring = function() {
         // }
     }
 }
+
+
 
 // Called to update the graph values and shift the graph to the left
 var shiftUpdateGraph = function(xvalue, yvalue, zvalue) {
