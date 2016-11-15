@@ -18,9 +18,6 @@
 4. Start wampserver and navigate to the following address using a web browser ('http://localhost/design_project/webInterface/public/').
 5. You should be directed to the landing page of the Gesture Notification System.
 
-### History
-In September 2015, this project started off as a brainstorming idea that we had and decided to run with for a design project for our fourth year Computer Engineering Porject
-
 ### Constructed by
 [Jordan Hatcher](https://jordan-hatcher.com/) && [Paul Loh](http://www.paulloh.com)
 
