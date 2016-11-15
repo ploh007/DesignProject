@@ -4,12 +4,6 @@
 The purpose of this project was to develop a system that can capture and analyze gestures performed by the user in order to control or provide inputs to a variety of different devices.
 This system was constructed to improve upon conventional methods of controlling devices by making the experience more natural for the user. 
 
-#### The system can be broken down into 2 Core Components
-+ Web Application			
-	+ Written using PHP (PSR Coding Standards Adhered To)
-	+ Front-end powered by HTML, CSS and JS
-+ Arduino Program
-
 ### Setup
 + Web Application System Setup Instructions
 	+ Ensure that the following programs are installed on the development Machine
