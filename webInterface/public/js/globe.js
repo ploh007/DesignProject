@@ -171,8 +171,8 @@ var startGlobeMonitoring = function(){
         }
 
 
-         // Create a Websocket
-        var conn = new WebSocket('ws://localhost:8085');
+        // Create a Websocket
+        var conn = new WebSocket('ws://localhost:8080');
 
         conn.onopen = function(e) {
             console.log('Connected to server:', conn);

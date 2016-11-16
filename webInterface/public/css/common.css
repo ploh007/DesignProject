@@ -224,13 +224,6 @@ table {
     z-index: 101;
 }
 
-.arduino-status-light {
-    color: #000;
-    background-color: #fff;
-    border-color: #000;
-}
-
-
 /*
  *  Classes for Jumbotron Colors
  */

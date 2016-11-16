@@ -1,0 +1,1 @@
+"E:\wamp64\bin\php\php5.6.19\php.exe" %cd%\appSocketServer.php

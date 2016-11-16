@@ -117,16 +117,3 @@ var CalibrationFSM = function() {
         currentStateVal = stateString;
     }
 };
-
-//  Test Caibration State Machine
-// var StateMachine = new CalibrationFSM();
-// var reqCalibrationReps = 15;
-// var calibrationState = null;
-// var calibrationRep = 0;
-
-// while(StateMachine.getState()!="CALIBCOMPLETE"){
-// 	StateMachine.begin();
-// 	calibrationRep++;
-// 	console.log(StateMachine.getState());
-// 	console.log(calibrationRep);
-// }

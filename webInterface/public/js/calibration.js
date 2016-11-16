@@ -172,7 +172,7 @@ var startCalibration = function() {
     var StateMachine;
 
     // Create a Websocket
-    var conn = new WebSocket('ws://192.168.137.1:8080');
+    var conn = new WebSocket('ws://localhost:8080');
 
     /**
      * Open the Websocket connection with the Server
@@ -238,6 +238,7 @@ var startCalibration = function() {
     conn.onmessage = function(e) {
 
         var message = e.data;
+        console.log(message);
 
         // if (message.startsWith("ARDUINO")) {
             if (calibrationStarted) {

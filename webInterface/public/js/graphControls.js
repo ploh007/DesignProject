@@ -43,7 +43,7 @@ var startMonitoring = function() {
 
     // Create a Websocket
     try {
-        var conn = new WebSocket('ws://192.168.137.1:8080');
+        var conn = new WebSocket('ws://localhost:8080');
     } catch (e) {
         throw e;
     }
@@ -95,7 +95,7 @@ var startMonitoring = function() {
             if (monitoringIsAlive) {
                 var partsOfStr = message.split(',');
                 if (monitoringIsAlive && (partsOfStr.length == 3)) {
-                    shiftUpdateGraph(parseInt(partsOfStr[0]), parseInt(partsOfStr[1]), parseInt(partsOfStr[2]));
+                    shiftUpdateGraph(partsOfStr[0], partsOfStr[1], partsOfStr[2]);
                     // vals[0] = partsOfStr[0];
                     // vals[1] = partsOfStr[1];
                     // vals[2] = partsOfStr[2];

@@ -101,10 +101,6 @@
     -o-animation: slideDown 1.5s 0.1s 1 ease forwards;
     transform: translateY(-50px);
     animation: slideDown 1.5s 0.1s 1 ease forwards;
-     /*-webkit-transform: translateY(-50px);*/
-    /*-webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;*/
-    /*-moz-transform:    translateY(-50px);*/
-    /*-moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;*/
 }
 
 /**

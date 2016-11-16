@@ -1,17 +1,15 @@
 @extends('common.basic')
 @section('content')
-<link href="./css/graph.css" rel="stylesheet"> 
-<!-- BODY COMPONENT -->
+<link href="{{ asset('css/home.css') }}" rel="stylesheet">
 
 <body>
-    <!-- MAINJUMBOTRON COMPONENT -->
     <div class="jumbotron red-jumbotron" data-wow-duration="2s">
         <div class="container">
             <h2>Gesture Control System</h2>
             <p>
                 Seamlessly intergrating gesture controls with your everyday devices. The *Gesture Control Device makes interacting with your devices easier than ever.
             </p>
-            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 59.066 59.066" style="enable-background:new 0 0 59.066 59.066;" xml:space="preserve" width="128px" height="128px">
+            <svg version="1.1" id="gesture_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 59.066 59.066" style="enable-background:new 0 0 59.066 59.066;" xml:space="preserve" width="128px" height="128px">
                 <path id="case" d="M52.844,27.116C52.412,26.396,51.689,26,50.805,26c-0.004,0-0.008,0-0.012,0c-1.667,0.006-3.673,0.667-5.235,1.724
                     c-1.441,0.975-3.53,2.782-5.293,5.863c-0.331,0.578-0.874,0.97-1.455,1.063c-0.002-0.134-0.001-0.287-0.001-0.432
                     c0-0.309,0.001-0.677-0.012-1.083V11c0-2.206-1.794-4-4-4s-4,1.794-4,4v15.5c0,0.275-0.225,0.5-0.5,0.5s-0.5-0.225-0.5-0.5V4
@@ -27,145 +25,32 @@
                     c0.013,0.411,0.012,0.758,0.012,1.05c-0.002,0.895-0.003,1.541,0.49,2.024c0.413,0.403,0.948,0.428,1.326,0.432
                     c1.361-0.031,2.655-0.833,3.376-2.092c1.571-2.748,3.41-4.344,4.677-5.199c1.232-0.834,2.851-1.376,4.123-1.381
                     c0.001,0,0.003,0,0.004,0c0.214,0,0.263,0.063,0.292,0.1C51.294,28.35,51.303,28.979,51.256,29.259z" fill="#c0392b" />
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-                <g>
-                </g>
-            </svg>
-        </div>
-    </div>
-    <!-- END MAINJUMBOTRON COMPONENT -->
-    <!-- HOWITWORKSJUMBOTRON COMPONENT -->
-    <div class="container white-jumbotron-center" data-wow-duration="2s">
-        <div class="row featurette">
-            <h2>How It Works</h2>
-            <p>
-                The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.
-            </p>
-            <hr>
-            <!-- ARDUINO DIAGRAM -->
-            <div class="col-md-6">
-                <div class="thumbnail">
-                    <img src="./img/arduino-3d.png" width="180px">
-                </div>
-                <a href="https://www.arduino.cc/en/Main/ArduinoBoardUno" class="btn btn-lg custom-btn btn-block">Arduino Uno</a>
-                <h5>The Arduino Uno offers a plethora of prototyping methods at an affordable cost. </h5>
-            </div>
-            <!-- END ARDUINO DIAGRAM -->
-            <!-- ADXL345 DIAGRAM -->
-            <div class="col-md-6">
-                <div class="thumbnail">
-                    <img src="./img/adxl345-3d.png" width="180px">
-                </div>
-                <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block">SparkFun ADXL 345</a>
-                <h5>The ADXL 345 allows measuring of acceleration data in 3 different axes (X,Y,Z). </h5>
-            </div>
-            <!-- END ADXL345 DIAGRAM -->
-        </div>
-    </div>
-    <!-- END HOWITWORKSJUMBOTRON COMPONENT -->
-    <!-- MOTIONCAPTURINGJUMBOTRON COMPONENT -->
-    <div class="arduino-status">
-        <img src="./img/arduino-3d.png" width="100px">
-        <h6 id="arduino-status-text"> Not Connected </h6>
-        <h6 id="arduino-status-mode"> Mode: Idle </h6>
-    </div>
-    <div class="jumbotron white-jumbotron" data-wow-duration="2s">
+            </svg><!-- /gesture_icon -->
+        </div><!-- /container -->
+    </div><!-- /jumbotron red-jumbotron -->
+
+    <div class="white-jumbotron-center" data-wow-duration="2s">
         <div class="container">
-            <h3>Motion Capturing</h3>
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-lg custom-btn" id="startMonBtn">
-                        Start Monitoring
-                    </button>
-                    <div>
-                        <h4>Monitoring Interval Settings: <span class="monIntervalSet">30</span></h4>
-                    </div>
-                </div>
-            </div>
-            <!-- ACCELEROMETER GRAPHS -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-4">
-                        <div id="X-Coordinate">
-                            <h3> X Coordinate Value </h3>
-                            <h5 id="xval">- X-Coordinate Reading -</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="Y-Coordinate">
-                            <h3> Y Coordinate Value </h3>
-                            <h5 id="yval">- Y-Coordinate Reading -</h5>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="Z-Coordinate">
-                            <h3> Z Coordinate Value </h3>
-                            <h5 id="zval">- Z-Coordinate Reading -</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END ACCELEROMETER GRAPHS -->
-        </div>
-    </div>
-    <!-- MOTIONCAPTURINGJUMBOTRON COMPONENT -->
-    <!-- JAVASCRIPT COMPONENTS   -->
-    <script src="./js/graph.js"></script>
-    <script src="./js/graphControls.js"></script>
-    <script src="./js/home.js"></script>
+            <div class="row featurette">
+                <h2>How It Works</h2>
+                <p>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</p>
+                <hr></hr>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img src="{{ asset('img/arduino-3d.png') }}" width="180px">
+                    </div><!-- /thumbnail -->
+                    <a href="https://www.arduino.cc/en/Main/ArduinoBoardUno" class="btn btn-lg custom-btn btn-block">Arduino Uno</a>
+                    <h5>The Arduino Uno offers a plethora of prototyping methods at an affordable cost. </h5>
+                </div><!-- /col-md-6 -->
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img src="{{ asset('img/adxl345-3d.png') }}" width="180px">
+                    </div><!-- /thumbnail -->
+                    <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block">SparkFun ADXL 345</a>
+                    <h5>The ADXL 345 allows measuring of acceleration data in 3 different axes (X,Y,Z). </h5>
+                </div><!-- /col-md-6 -->
+            </div><!-- /row featurette -->
+        </div><!-- /container -->
+    </div><!-- /white-jumbotron-center -->
 </body>
-<!-- END BODY COMPONENT -->
-<!-- SETTINGS MODAL -->
-<div class="modal fade" id="monModal" tabindex="-1" role="dialog" aria-labelledby="settingsModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="settingsModal"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Monitoring Rate</h4>
-            </div>
-            <form class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputPassword3" class="col-sm-2 control-label">Monitoring Rate (ms)</label>
-                        <div class="input-group">
-                            <input id="userMonitoringVal" required type="number" min=1 max=8000 value="250" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- END SETTINGS MODAL -->
 @endsection

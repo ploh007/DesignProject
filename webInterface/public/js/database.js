@@ -127,7 +127,7 @@ $("#refresh-device").click(function(e) {
 
         // Create a Websocket
     try {
-        var conn = new WebSocket('ws://localhost:8085');
+        var conn = new WebSocket('ws://localhost:8080');
     } catch (e) {
         throw e;
     }

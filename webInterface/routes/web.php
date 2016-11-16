@@ -11,7 +11,6 @@
 |
 */
 
-
 // Route to home landing page
 Route::get('/', function () {
     return view('home');
@@ -47,22 +46,17 @@ Route::get('/admin', 'HomeController@index');
 
 // Route to Help Page
 Route::get('/help', function () {
-    return view('help');
+    return view('help.help');
 });
 
 Route::get('/database', "DeviceController@index");
+Route::get('/loadsamples', "DeviceController@getSamples");
+
 Route::post('/database-show', 'DeviceController@showDevices');
 Route::post('/database-pair', 'DeviceController@pairDevice');
 Route::post('/database-unpair', 'DeviceController@unpairDevice');
 
-Route::get('/loadsamples', "DeviceController@getSamples");
 Route::post('/loadsamples2', "DeviceController@saveSample");
-
-
-Route::get('/samples', function () {
-    return view('database.sampleAdd');
-})->middleware('auth');
-
 Route::post('/samples-add', "DeviceController@createSample");
 
 Auth::routes();
