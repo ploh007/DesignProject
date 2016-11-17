@@ -55,6 +55,9 @@ int captureState = 0;
 int counter = 0;
 
 
+String id = "101";
+
+
 void setup(){
 
   //********* BEGIN WIFI SETUP ************
@@ -78,6 +81,8 @@ void setup(){
   if(!client.connect(server, port)) {
     while(true);
   }
+
+  client.println("AR_" + id);
   
   //********** BEGIN ACCELEROMETER SETUP *************
   //Initiate an SPI communication instance.
@@ -219,16 +224,38 @@ void customSerialEvent() {
 
     if(inChar == 'C') {
       mode = CALIBRATION_MODE;
+      client.println("AR_MC");
     }else if(inChar == 'U') {
       mode = USER_MODE;
+      client.println("AR_MU");
     }else if(inChar == 'R') {
       mode = RAW_DATA_MODE;
-    } else if(inChar == 'P') {
+      client.println("AR_MR");
+    }else if(inChar == 'M') {
+      if(mode == CALIBRATION_MODE) {
+        client.println("AR_MC");
+      }else if(mode == USER_MODE) {
+        client.println("AR_MU");
+      }else if(mode == RAW_DATA_MODE) {
+        client.println("AR_MR");
+      }
+    }else if(inChar == 'I') {
       // Request ping for arduino device controller ID
-      client.println("101");
+      client.println("AR_" + id);
     }
   }
 }
+
+
+/*
+void printDataString() {
+  char test[384];
+  for(int i=0;i<384;i++) {
+    test[i] = 0x8F;
+  }
+  client.write((char*)&test, 384);
+}*/
+
 
 void printDataString() {
   
@@ -250,7 +277,6 @@ void printDataString() {
     }
     client.println(dataString);
   }
-  client.println(String(capturedJerkVector[0]) + "," + String(capturedJerkVector[1]) + "," + String(capturedJerkVector[2]));
 }
 
 //This function will write a value to a register on the ADXL345.
