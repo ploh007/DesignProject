@@ -9,6 +9,9 @@ use App\DeviceUser;
 use App\Http\Requests;
 use App\Repositories\DeviceRepository;
 
+use GestureRecognition\GestureSample;
+use GestureRecognition\Comparator;
+
 class DeviceController extends Controller
 {
 
@@ -47,7 +50,6 @@ class DeviceController extends Controller
         $request->user()->tasks()->create([
             'name' => $request->name,
         ]);
-
     }
 
     public function index(Request $request)
@@ -79,7 +81,7 @@ class DeviceController extends Controller
     public function pairDevice(Request $request)
     {
         $this->validate($request, [
-            'deviceslist' => 'exists:devices,id',
+            'deviceslist' => 'exists:devices,id'
         ]);
 
         $device_id = $request->deviceslist;
@@ -116,32 +118,51 @@ class DeviceController extends Controller
      */
     public function getSamples(Request $request)
     {
+        // Data from User Mode
+        
 
-        // $sample = new Sample;
+        $gestureSamplesArray = array();
 
-        // $sample->sample_id = "00001";
-        // $sample->gestureName = "Undefined";
-        // $sample->sampleData = "XXXXXX";
-        // $sample->pair_id = 1;
+        $rawSamples = DeviceUser::find(1)->samples;
 
-        // $sample->save();
+        // Get Samples and create FFT
+        foreach ($rawSamples as $rawSample) {
+            // Create a gestureSample
 
-        $vals = DeviceUser::find(1)->samples;
+            $rawString = $rawSample->sampleData;
 
-        // $sams = $vals->samples();
+            $dataString = explode(";", $rawString);
 
-        // echo (print_r($sams));
+            // Seperate on commas
+            $dataArrayX = array_map('intval', explode(",", $dataString[0]));
+            $dataArrayY = array_map('intval', explode(",", $dataString[1]));
+            $dataArrayZ = array_map('intval', explode(",", $dataString[2]));
 
-        foreach ($vals as $val) {
-            //
+            $gestureSample = new GestureSample($dataArrayX, $dataArrayY, $dataArrayZ, $rawSample->gestureName);
 
-            echo $val;
+            array_push($gestureSamplesArray, $gestureSample);
         }
 
-        return "Done";
+        // Create Instance of Comparator
+        $comparator = new Comparator($gestureSamplesArray);
+
+        $sampleSampleData = $request->sampleData;
+
+        $dataSampleString = explode(";", $sampleSampleData);
+        $sampleDataArrayX = array_map('intval', explode(",", $dataSampleString[0]));
+        $sampleDataArrayY = array_map('intval', explode(",", $dataSampleString[1]));
+        $sampleDataArrayZ = array_map('intval', explode(",", $dataSampleString[2]));
+
+        $recognizedGesture = $comparator->getGesture($sampleDataArrayX, $sampleDataArrayY, $sampleDataArrayZ);
+
+        return response()->json([
+                                'data' => $recognizedGesture,
+                            ], 200);
+
+        // return $gestureSamplesArray;
     }
 
-    // Creates a sample 
+    // Creates a sample
     public function createSample(Request $request)
     {
         // Request should contain the sampledata, pairid, gesturename
@@ -150,6 +171,8 @@ class DeviceController extends Controller
         //     'gestureName' => 'required|max:255',
         //     'sampleData' => 'required',
         // ]);
+
+
 
         $sample = new Sample;
         $sample->gestureName = $request->gestureName;
@@ -160,7 +183,6 @@ class DeviceController extends Controller
         return response()->json([
                                 'data' => ' Some data response ',
                             ], 200);
-
     }
 
     public function addCalibrationSample(Request $request)
@@ -227,5 +249,4 @@ class DeviceController extends Controller
     {
         //
     }
-
 }

@@ -54,6 +54,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="gestureNotifier">Gesture Notifier</a></li>
                             <li><a href="globeController">Globe Controller</a></li>
+                            <li><a href="graph">Graph Controller</a></li>
                         </ul><!-- /dropdown-menu -->
                     </li><!-- /dropdown -->
                     <li><a href="presentation"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> Presentation</a></li>

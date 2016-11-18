@@ -32,8 +32,7 @@
     <div class="white-jumbotron-center" data-wow-duration="2s">
         <div class="container">
             <div class="row featurette">
-                <h2>How It Works</h2>
-                <p>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</p>
+                <h2>Core Components</h2>
                 <hr></hr>
                 <div class="col-md-6">
                     <div class="thumbnail">
@@ -52,5 +51,15 @@
             </div><!-- /row featurette -->
         </div><!-- /container -->
     </div><!-- /white-jumbotron-center -->
+
+    <div class="jumbotron red-jumbotron" data-wow-duration="2s">
+        <div class="container">
+            <div class="row featurette">
+                <h2>How It Works</h2>
+                <p>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</p>
+            </div><!-- /row featurette -->                
+        </div><!-- /container -->
+    </div><!-- /white-jumbotron-center -->
+
 </body>
 @endsection

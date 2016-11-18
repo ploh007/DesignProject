@@ -185,8 +185,8 @@ var startCalibration = function() {
 
         // Fetch the mode in which the arduino is in
         // conn.send("GETMODE");
-        conn.send("C");
         // conn.send("M");
+        conn.send("C");
     }
 
     /**
@@ -232,41 +232,37 @@ var startCalibration = function() {
      *   and ensures the arduino is operating in the calibration state. 
      * - Begins calibration sequence once initialized.
      */
-
-    var data = ''
-
     conn.onmessage = function(e) {
 
         var message = e.data;
         console.log(message);
 
-        // if (message.startsWith("ARDUINO")) {
-            if (calibrationStarted) {
+        if (calibrationStarted) {
 
-                if (message == "TOOLOW") {
-                    updateCalibrationStatus(1);
-                } else {
-                    addSample(data, StateMachine.getState());
-                    updateCalibrationStatus(0);
-                }
+            if (message == "AR_C0") {
+                updateCalibrationStatus(1);
+            } else if (message.startsWith("AR_C1:")) {
+                addSample(message.substring(6), StateMachine.getState());
+                updateCalibrationStatus(0);
+            }
 
-                StateMachine.begin();
+            StateMachine.begin();
+        } else {
+
+            if (message.includes("AR_MC")) {
+                calibrationStarted = true;
+
+                $("#calibration-btn").prop("disabled", true);
+                setArduinoStatus("CONNECTED", "Calib");
+
+                StateMachine = new CalibrationFSM(); // Initialize State Machine and Begin
+                StateMachine.begin(); // Advances to Start Calibration State
             } else {
 
-                if (message.includes("AR_MC")) {
-                    calibrationStarted = true;
+                conn.send("C");
 
-                    $("#calibration-btn").prop("disabled", true);
-                    setArduinoStatus("CONNECTED", "Calib");
-
-                    StateMachine = new CalibrationFSM(); // Initialize State Machine and Begin
-                    StateMachine.begin(); // Advances to Start Calibration State
-                } else if (message.includes("AR_MU") || message.includes("AR_MR")) {
-                    conn.send("C");
-                    conn.send("M");
-                }
             }
-        // }
+        }
     }
 
 
@@ -299,7 +295,7 @@ var startCalibration = function() {
         }
 
         var formData = {
-            pair_id: '5',
+            pair_id: '1',
             gestureName: $gestureName,
             sampleData: $sample,
         }

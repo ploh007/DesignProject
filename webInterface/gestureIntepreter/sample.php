@@ -4,7 +4,7 @@ namespace GestureRecognition;
 
 use GestureRecognition\Utils;
 
-class Sample
+class GestureSample
 {
     private $fft;
     private $dataX;
@@ -19,7 +19,7 @@ class Sample
     private $jerkVector;
     private $gesture;
 
-    public function __construct($dataX, $dataY, $dataZ, $jerkVector, $gesture)
+    public function __construct($dataX, $dataY, $dataZ, $gesture)
     {
         $this->dataX = $dataX;
         $this->dataY = $dataY;
@@ -32,7 +32,6 @@ class Sample
 
         $this->fft = Utils::combineSampleArrays(Fft::fft($dataX), Fft::fft($dataY), Fft::fft($dataZ));
 
-        $this->jerkVector = $jerkVector;
         $this->gesture = $gesture;
     }
 
@@ -43,46 +42,46 @@ class Sample
 
     public function getJerkVector()
     {
-        return $this->$jerkVector;
+        return $this->jerkVector;
     }
 
     public function getGesture()
     {
-        return $this->$gesture;
+        return $this->gesture;
     }
 
     public function getDataX()
     {
-        return $this->$dataX;
+        return $this->dataX;
     }
 
     public function getDataY()
     {
-        return $this->$dataY;
+        return $this->dataY;
     }
 
     public function getDataZ()
     {
-        return $this->$dataZ;
+        return $this->dataZ;
     }
 
     public function getPeakListX()
     {
-        return $this->$peakListX;
+        return $this->peakListX;
     }
 
     public function getPeakListY()
     {
-        return $this->$peakListY;
+        return $this->peakListY;
     }
 
     public function getPeakListZ()
     {
-        return $this->$peakListZ;
+        return $this->peakListZ;
     }
 
     public function getOrientation()
     {
-        return $this->$orientation;
+        return $this->orientation;
     }
 }

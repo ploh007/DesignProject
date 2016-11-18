@@ -7,7 +7,7 @@ class Fft
     public static function fft($samples)
     {
         // Multidimensional Array
-        $complexFft = complexFft($samples, count($samples), 1, 0);
+        $complexFft = Fft::complexFft($samples, count($samples), 1, 0);
         $fftMagnitudes = array();
 
         for ($i=0; $i<count($samples); $i++) {
@@ -17,7 +17,7 @@ class Fft
         return $fftMagnitudes;
     }
 
-    private static function complexFft($arrayX, $n, $s, $start)
+    public static function complexFft($arrayX, $n, $s, $start)
     {
         $result;
 
@@ -27,8 +27,8 @@ class Fft
             $result[0][1] = 0.0;
         } else {
             $result = array(array());
-            $bottom = complexFft($x, $n/2, 2*$s, $start);
-            $top = complexFft($x, $n/2, 2*$s, $start + $s);
+            $bottom = Fft::complexFft($arrayX, $n/2, 2*$s, $start);
+            $top = Fft::complexFft($arrayX, $n/2, 2*$s, $start + $s);
 
             for ($k=0; $k<($n/2); $k++) {
                 $topK = $k+($n/2);

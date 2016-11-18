@@ -18,6 +18,6 @@
         </div><!-- /container -->
     </div><!-- /jumbotron white-jumbotron-center -->
 </body>
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="{{ asset('js/demo.js') }}"></script>
 @endsection

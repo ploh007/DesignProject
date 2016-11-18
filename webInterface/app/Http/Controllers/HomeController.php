@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.controls');
+
+        // Perform database check
+        $devicesTableAvailable = Schema::hasTable('devices');
+        $usersTableAvailable = Schema::hasTable('users');
+        $samplesTableAvailable = Schema::hasTable('samples');
+        $deviceUserTableAvailable = Schema::hasTable('device_user');
+
+        if ($devicesTableAvailable && $usersTableAvailable && $samplesTableAvailable && $deviceUserTableAvailable) {
+            $databaseStatus = true;
+        }
+
+        return view('admin.controls', ['databaseTable' => $databaseStatus]);
     }
 }

@@ -49,6 +49,11 @@ Route::get('/help', function () {
     return view('help.help');
 });
 
+Route::get('/graph', function () {
+    return view('apps.graph');
+});
+
+
 Route::get('/database', "DeviceController@index");
 Route::get('/loadsamples', "DeviceController@getSamples");
 
@@ -58,5 +63,6 @@ Route::post('/database-unpair', 'DeviceController@unpairDevice');
 
 Route::post('/loadsamples2', "DeviceController@saveSample");
 Route::post('/samples-add', "DeviceController@createSample");
+Route::post('/gesture-get', "DeviceController@getSamples");
 
 Auth::routes();

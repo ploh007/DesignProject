@@ -20,15 +20,6 @@
             <h4>Admin System Controls</h4>
             <div class="row">
                 <div class="col-md-3">
-                    <button type="button" class="btn custom-btn btn-lg btn-block" data-toggle="modal" data-target="#addDevice">Add Device</button>
-                </div><!-- /col-md-3 -->
-                <div class="col-md-3">
-                    <button class="btn custom-btn btn-lg btn-block" id="initiateWebServer">Start WebSocket Server</button>
-                </div><!-- /col-md-3 -->
-                <div class="col-md-3">
-                    <button class="btn custom-btn btn-lg btn-block" id="initiateMetricsUpdate">Update Metrics</button>
-                </div><!-- /col-md-3 -->
-                <div class="col-md-3">
                     <button class="btn custom-btn btn-lg btn-block" id="initateSystemCheck">Run System Check</button>
                 </div><!-- /col-md-3 -->
             </div><!-- /row -->
@@ -50,14 +41,14 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Gesture Device</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
                                 <td>Database Status</td>
-                                <td></td>
-                                <td></td>
+                                @if ($databaseTable)
+                                    <td class="success">No Issues</td>
+                                    <td></td>
+                                @else
+                                    <td class="danger">Error</td>
+                                    <td></td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>
@@ -68,30 +59,26 @@
                         <thead>
                             <th>System Component</th>
                             <th>Value</th>
-                            <th>Description</th>
+                            
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Latency</td>
+                                <td>Devices Online</td>
                                 <td></td>
+                                
+                            </tr>
+                            <tr>
+                                <td>Paired Devices</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Transferred Data</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Database Status</td>
-                                <td></td>
+                                <td>Total Devices</td>
                                 <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div><!-- /col-md-6 -->
             </div><!-- /row -->
-            <hr></hr>
-            @include("apps.graph")
         </div><!-- /panel-body -->
     </div><!-- /container -->
 </body>

@@ -18,14 +18,26 @@ socket_listen($socket); //listen to port
 // Create & add listning socket to the list
 $clients = array($socket);
 
+$mode = '';
+$modeFlag = '';
+
 // Create a list to add arduino devices to
 $socketClients = array();
+
+$completeCalibFlag = false;
+$completeCalibCount = 0;
+$calibDataString = "";
+
+$completeCalibFlag = false;
+$completeUserCount = 0;
+$userDataString = "";
+
 
 while (true) {
     // Manage multiple socket connections
     $changed = $clients;
 
-    // socket_select() accepts arrays of sockets and waits for them to change statu
+    // socket_select() accepts arrays of sockets and waits for them to change status
     socket_select($changed, $null, $null, 0, 0);
     
     //check for new socket
@@ -58,26 +70,82 @@ while (true) {
                 $response_text = "";
 
                 if (in_array($changed_socket, $socketClients)) {
+                    if (strpos($buf, "AR_MC") !== false) {
+                        $response_text = "AR_MC";
+                        $modeFlag = true;
+                    } else if (strpos($buf, "AR_MR") !== false) {
+                        $response_text = "AR_MR";
+                        $modeFlag = true;
+                    } else if (strpos($buf, "AR_MU") !== false) {
+                        $response_text = "AR_MU";
+                        $modeFlag = true;
+                    } else if ($modeFlag == false && $mode == "CALIB") {
+                        send_socketClients('C');
+                    } else if ($modeFlag == false && $mode == "USER") {
+                        send_socketClients('U');
+                    } else if ($modeFlag == false && $mode == "RAW") {
+                        send_socketClients('R');
+                    } else if (($mode == "CALIB") && ($modeFlag == true)) {
+                        // $intArray = binaryToIntArray($buf);
+                        // echo "RECEVIED CALIBRATION DATA with length:" + count($intArray);
+                        // print_r($intArray);
+                        // vardump($intArray);
+
+                        if (strpos($buf, "TOOLOW") !== false) {
+                            send_websocketClients(mask("AR_C0"));
+                        } else {
+                            $calibDataString .= $buf.";";
+                            if ($completeCalibCount == 2) {
+                                $completeCalibCount = 0;
+
+                                // Do Database stuff
+                                send_websocketClients(mask("AR_C1:$calibDataString"));
+                                $calibDataString = "";
+                            } else {
+                                $completeCalibCount++;
+                            }
+                        }
+                    } else if (($mode == "USER") && ($modeFlag == true)) {
+                        $userDataString .= $buf.";";
+                        if ($completeUserCount == 2) {
+                            $completeUserCount = 0;
+
+                            // Do Database stuff
+                            send_websocketClients(mask("AR_U:$userDataString"));
+                            $userDataString = "";
+                        } else {
+                            $completeUserCount++;
+                        }
+                    }
+
+                    // echo "Received Message from Arduino: ".$buf."\n";
                     $response_text = mask($buf);
                     send_websocketClients($response_text);
+
                 } else {
                     $response_text = unmask($buf);
 
                     if (substr($response_text, 0, strlen("C")) === "C") {
                         $response_text = 'C';
-                        echo "Attempting to send Message to Arduino \n";
+                        $modeFlag = false;
+                        $mode = "CALIB";
+                        // echo "Attempting to send Message to Arduino \n";
                         send_socketClients($response_text);
                     } else if (substr($response_text, 0, strlen("U")) === "U") {
                         $response_text = 'U';
-                        echo "Attempting to send Message to Arduino \n";
+                        $modeFlag = false;
+                        $mode = "USER";
+                        // echo "Attempting to send Message to Arduino \n";
                         send_socketClients($response_text);
                     } else if (substr($response_text, 0, strlen("R")) === "R") {
                         $response_text = 'R';
-                        echo "Attempting to send Message to Arduino \n";
+                        $modeFlag = false;
+                        $mode = "RAW";
+                        // echo "Attempting to send Message to Arduino \n";
                         send_socketClients($response_text);
                     } else if (substr($response_text, 0, strlen("M")) === "M") {
                         $response_text = 'M';
-                        echo "Attempting to send Message to Arduino \n";
+                        // echo "Attempting to send Message to Arduino \n";
                         send_socketClients($response_text);
                     }
                     echo "Received Message from Client : ".$response_text."\n";
@@ -93,10 +161,11 @@ while (true) {
                 socket_getpeername($changed_socket, $ip);
                 unset($clients[$found_socket]);
 
-                echo "Web Socket Client: ".$changed_socket." disconnected \n";
+                // echo "Web Socket Client: ".$changed_socket." disconnected \n";
             }
         } else {
-            $buf = socket_read($changed_socket, 1024, PHP_BINARY_READ);
+            $buf = socket_read($changed_socket, 384, PHP_BINARY_READ);
+
             if ($buf === false) {
                 // Remove client from clients array
                 $found_socket = array_search($changed_socket, $clients);
@@ -106,7 +175,7 @@ while (true) {
                 $found_socket = array_search($changed_socket, $socketClients);
                 unset($socketClients[$found_socket]);
 
-                echo "Socket Client: ".$changed_socket." disconnected \n";
+                // echo "Socket Client: ".$changed_socket." disconnected \n";
             }
         }
     }
@@ -124,7 +193,7 @@ function send_websocketClients($msg)
     foreach ($clients as $changed_socket) {
         if (!in_array($changed_socket, $socketClients)) {
             @socket_write($changed_socket, $msg, strlen($msg));
-            echo "Sending Message to Client : ".$msg." to $changed_socket \n";
+            // echo "Sending Message to Client : ".$msg." to $changed_socket \n";
         }
     }
     return true;
@@ -137,7 +206,7 @@ function send_socketClients($msg)
 
     foreach ($socketClients as $changed_socket) {
         socket_write($changed_socket, $msg, strlen($msg));
-        echo "Sending Message to Arduino : ".$msg." to $changed_socket \n";
+        // echo "Sending Message to Arduino : ".$msg." to $changed_socket \n";
     }
     return true;
 }
@@ -166,18 +235,43 @@ function unmask($payload)
     return $text;
 }
 
+function binaryToIntArray($buf)
+{
+    $intArray = array();
+
+    for ($i = 0; $i < strlen($buf); $i+=2) {
+        $unsignedVal = (ord($buf[$i]) << 8) | ord($buf[$i+1]);
+        $signBit = $unsignedVal & 0x8000;
+
+        if ($signBit != 0) {
+            if (PHP_INT_SIZE == 8) {
+                $signBit = 0xFFFFFFFFFFFF0000;
+            } else {
+                $signBit = 0xFFFF0000;
+            }
+        }
+
+        echo $unsignedVal;
+
+        $signedVal = $signBit | $unsignedVal;
+        array_push($intArray, $signedVal);
+    }
+    return $intArray;
+}
+
 // Encode message for transfer to client
 function mask($text)
 {
     $b1 = 0x80 | (0x1 & 0x0f);
     $length = strlen($text);
     
-    if($length <= 125)
+    if ($length <= 125) {
         $header = pack('CC', $b1, $length);
-    elseif($length > 125 && $length < 65536)
+    } elseif ($length > 125 && $length < 65536) {
         $header = pack('CCn', $b1, 126, $length);
-    elseif($length >= 65536)
+    } elseif ($length >= 65536) {
         $header = pack('CCNN', $b1, 127, $length);
+    }
     return $header.$text;
 }
 
@@ -204,74 +298,4 @@ function perform_handshaking($receved_header, $client_conn, $host, $port)
     "WebSocket-Location: ws://$host:$port/demo/shout.php\r\n".
     "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
     socket_write($client_conn, $upgrade, strlen($upgrade));
-}
-
-function _hybi10Encode($payload, $type = 'text', $masked = true)
-{
-    $frameHead = array();
-    $frame = '';
-    $payloadLength = strlen($payload);
-    
-    switch ($type) {
-        case 'text':
-            // first byte indicates FIN, Text-Frame (10000001):
-            $frameHead[0] = 129;
-            break;
-    
-        case 'close':
-            // first byte indicates FIN, Close Frame(10001000):
-            $frameHead[0] = 136;
-            break;
-    
-        case 'ping':
-            // first byte indicates FIN, Ping frame (10001001):
-            $frameHead[0] = 137;
-            break;
-    
-        case 'pong':
-            // first byte indicates FIN, Pong frame (10001010):
-            $frameHead[0] = 138;
-            break;
-    }
-    
-    // set mask and payload length (using 1, 3 or 9 bytes)
-    if ($payloadLength > 65535) {
-        $payloadLengthBin = str_split(sprintf('%064b', $payloadLength), 8);
-        $frameHead[1] = ($masked === true) ? 255 : 127;
-        for ($i = 0; $i < 8; $i++) {
-            $frameHead[$i+2] = bindec($payloadLengthBin[$i]);
-        }
-        // most significant bit MUST be 0 (close connection if frame too big)
-        if ($frameHead[2] > 127) {
-            $this->close(1004);
-            return false;
-        }
-    } elseif ($payloadLength > 125) {
-        $payloadLengthBin = str_split(sprintf('%016b', $payloadLength), 8);
-        $frameHead[1] = ($masked === true) ? 254 : 126;
-        $frameHead[2] = bindec($payloadLengthBin[0]);
-        $frameHead[3] = bindec($payloadLengthBin[1]);
-    } else {
-        $frameHead[1] = ($masked === true) ? $payloadLength + 128 : $payloadLength;
-    }
-    // convert frame-head to string:
-    foreach (array_keys($frameHead) as $i) {
-        $frameHead[$i] = chr($frameHead[$i]);
-    }
-    if ($masked === true) {
-        // generate a random mask:
-        $mask = array();
-        for ($i = 0; $i < 4; $i++) {
-            $mask[$i] = chr(rand(0, 255));
-        }
-        
-        $frameHead = array_merge($frameHead, $mask);
-    }
-    $frame = implode('', $frameHead);
-    // append payload to frame:
-    $framePayload = array();
-    for ($i = 0; $i < $payloadLength; $i++) {
-        $frame .= ($masked === true) ? $payload[$i] ^ $mask[$i % 4] : $payload[$i];
-    }
-    return $frame;
 }

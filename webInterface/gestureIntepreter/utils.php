@@ -11,7 +11,7 @@ class Utils
 
     public static function getPeakList($arrayX)
     {
-        $peakList = new SplDoublyLinkedList();
+        $peakList = array();
         $arrayXLength = count($arrayX);
         $adjustedArray = array();
         $average = 0;
@@ -30,10 +30,10 @@ class Utils
         for ($i=1; $i<count($arrayXLength)-1; $i++) {
             if ($adjustedArray[$i] > $adjustedArray[$i-1] && $adjustedArray[$i] > $adjustedArray[$i+1] && abs($adjustedArray[$i]) > $PEAK_THRESHOLD) { //positive peak
                 $peak = new Peak(1, $adjustedArray[$i], $i);
-                $peakList->push($peak);
+                array_push($peakList, $peak);
             } else if ($adjustedArray[$i] < $adjustedArray[$i-1] && $adjustedArray[$i] < $adjustedArray[$i+1] && abs($adjustedArray[$i]) > $PEAK_THRESHOLD) { //negative peak
                 $peak = new Peak(-1, $adjustedArray[$i], $i);
-                $peakList->push($peak);
+                array_push($peakList, $peak);
             }
         }
         
@@ -73,7 +73,7 @@ class Utils
             $dotProduct += $arrayX[$i]*$arrayY[$i];
         }
  
-        $angle = acos($dotProduct / (magnitude($arrayX) * magnitude($arrayY)));
+        $angle = acos($dotProduct / (Utils::magnitude($arrayX) * Utils::magnitude($arrayY)));
         return $angle;
     }
     
@@ -92,6 +92,9 @@ class Utils
     public static function getOrientationVector($dataX, $dataY, $dataZ)
     {
         $orientation = array();
+        $orientation[0] =0;
+        $orientation[1] =0;
+        $orientation[2] =0;
         
         foreach ($dataX as $val) {
             $orientation[0] += $val;
