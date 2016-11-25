@@ -10,9 +10,9 @@ class Peak
     
     public function __construct($orientation, $level, $sampleIndex)
     {
-        $this->orientation = orientation;
-        $this->level = level;
-        $this->sampleIndex = sampleIndex;
+        $this->orientation = $orientation;
+        $this->level = $level;
+        $this->sampleIndex = $sampleIndex;
     }
     
     public function getOrientation()

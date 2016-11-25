@@ -7,27 +7,28 @@ use GestureRecognition\Peak;
 class Utils
 {
     /* Peak Value to trigger for calculations */
-    public static $PEAK_THRESHOLD = 55;
-
     public static function getPeakList($arrayX)
     {
+
+        $PEAK_THRESHOLD = 55;
+
         $peakList = array();
         $arrayXLength = count($arrayX);
         $adjustedArray = array();
         $average = 0;
 
-        for ($i=0; $i<$arrayXLength; $i++) {
-            $average += $arrayX[$i];
-            $adjustedArray[$i] = $arrayX[$i];
+        for ($k=0; $k<$arrayXLength; $k++) {
+            $average += $arrayX[$k];
+            $adjustedArray[$k] = $arrayX[$k];
         }
 
         $average /= $arrayXLength;
 
-        for ($i=0; $i<$arrayXLength; $i++) {
-            $adjustedArray[$i] -= $average;
+        for ($j=0; $j<$arrayXLength; $j++) {
+            $adjustedArray[$j] -= $average;
         }
         
-        for ($i=1; $i<count($arrayXLength)-1; $i++) {
+        for ($i=1; $i<$arrayXLength-1; $i++) {
             if ($adjustedArray[$i] > $adjustedArray[$i-1] && $adjustedArray[$i] > $adjustedArray[$i+1] && abs($adjustedArray[$i]) > $PEAK_THRESHOLD) { //positive peak
                 $peak = new Peak(1, $adjustedArray[$i], $i);
                 array_push($peakList, $peak);
