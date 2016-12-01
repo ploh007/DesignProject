@@ -9,7 +9,9 @@
 var calibrationStarted = false;
 var timeStamp = "0";
 var calibrationRep = 0;
-var reqCalibrationReps = 3;
+var reqCalibrationReps = 5; // Dfault calibration repetitions
+var FSMIndex = 0;
+var conn;
 
 /* Calibration Notification */
 
@@ -100,7 +102,6 @@ var updateCalibrationStatus = function(calibStatus) {
     if (calibStatus == 0) {
         setCalibrationNotification("#26A65B", "#FFF", "<span class='glyphicon glyphicon-ok-circle'></span> Calibration Successful");
         calibrationRep = calibrationRep + 1;
-        $("#calibration-counter").html("Successfully Calibrated: " + calibrationRep + "/" + reqCalibrationReps);
     } else if (calibStatus == 1) {
         setCalibrationNotification("#F22613", "#FFF", "<span class='glyphicon glyphicon-remove-circle'></span> Calibration Failed");
     } else {
@@ -117,7 +118,7 @@ var resetCalibration = function() {
 
     // Enable Calibration Button
     $("#calibration-btn").prop("disabled", false);
-    $("#calibration-btn").html("Start <br> Calibration");
+    $("#calibration-btn").html("Setup <br> Calibration");
 
     // Reset the Calibration Notifier
     hideCalibrationNotifier();
@@ -140,52 +141,90 @@ var showCalibrationInformation = function(gestureType) {
 
     hideCalibrationNotifier();
 
-    if (gestureType == "Right") {
-        setCalibrationNotifier("Calibration for Right Gesture");
-        setCalibrationImage("<h2><img src='assets/images/swipe-helper.gif' width=200px></h2>");
-        setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe right motion.");
-    } else if (gestureType == "Left") {
-        setCalibrationNotifier("Calibration for Left Gesture");
-        setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-        setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe left motion.");
-    } else if (gestureType == "Down") {
-        setCalibrationNotifier("Calibration for Down Gesture");
-        setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-        setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe down motion.");
-    } else if (gestureType == "Up") {
-        setCalibrationNotifier("Calibration for Up Gesture");
-        setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-        setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe Up motion.");
-    } else if (gestureType == "Complete") {
+    // if (gestureType == "Right") {
+    //     setCalibrationNotifier("Calibration for Right Gesture");
+    //     setCalibrationImage("<h2><img src='assets/images/swipe-helper.gif' width=200px></h2>");
+    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe right motion.");
+    // } else if (gestureType == "Left") {
+    //     setCalibrationNotifier("Calibration for Left Gesture");
+    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe left motion.");
+    // } else if (gestureType == "Down") {
+    //     setCalibrationNotifier("Calibration for Down Gesture");
+    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe down motion.");
+    // } else if (gestureType == "Up") {
+    //     setCalibrationNotifier("Calibration for Up Gesture");
+    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe Up motion.");
+    // } else if (gestureType == "Complete") {
+    //     setCalibrationNotifier("Calibration Process Complete");
+    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+    //     setCalibrationInstructions(" Calibration Process Complete");
+    // }
+
+
+    if (gestureType == "Complete") {
         setCalibrationNotifier("Calibration Process Complete");
         setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
         setCalibrationInstructions(" Calibration Process Complete");
+    } else {
+        setCalibrationNotifier("Calibration " + gestureType);
+        // setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+        setCalibrationInstructions(" Hold the Gesture Control Device and perform the "+ gestureType +" motion.");
     }
 
     showCalibrationNotifier();
     showCalibrationImage();
 }
 
+// 
+var addToGestureList  = function(){
+    var gestureToAdd = $('#customGestureName').val();
+
+    if(gestureToAdd.trim() === ""){
+        $('#customGestureName').addClass('btn-danger');
+    } else {
+        $('#customGestureName').removeClass('btn-danger');
+        $('#gesture-list').append('<option value="'+ gestureToAdd.toLowerCase() +'">'+ gestureToAdd +'</option>');
+    }
+}
+
+var removeFromGestureList  = function(){
+    $('#gesture-list option:selected').remove();
+}
+
 var startCalibration = function() {
+
+    // Get the number of samples for each calibration
+    reqCalibrationReps = $("#calibrationSampleVal").val();
+    var calibrationDictionary = {};
+
+    var index = 0;
+
+    $("#gesture-list option").each(function()
+    {
+        // Add $(this).val() to your list
+        console.log($(this).val());
+        calibrationDictionary[parseInt(index)] = $(this).val();
+        index++;
+        // Make a dictionary for the FSM to use
+
+
+    });
+
+    console.log(calibrationDictionary);
 
     // Instatiate a new Calibration FSM
     var StateMachine;
 
     // Create a Websocket
-    var conn = new WebSocket('ws://localhost:8080');
+    conn = new WebSocket('ws://192.168.137.1:8080');
 
     /**
      * Open the Websocket connection with the Server
      */
     conn.onopen = function(e) {
-
-        // if (DEBUGMODE) {
-        console.log('Connected to server:', conn);
-        // }
-
-        // Fetch the mode in which the arduino is in
-        // conn.send("GETMODE");
-        // conn.send("M");
         conn.send("C");
     }
 
@@ -193,12 +232,6 @@ var startCalibration = function() {
      * Error reached on the Websocket connection handler
      */
     conn.onerror = function(e) {
-
-        // Couldnt connect to the server, display error
-        // if (DEBUGMODE) {
-        //     console.log('Error: Could not connect to server.');
-        //     console.log(e);
-        // }
 
         calibrationStarted = false;
 
@@ -220,10 +253,6 @@ var startCalibration = function() {
         // Set the Arduino to the User Mode
         conn.send("SETMODEUSER");
         setArduinoStatus("DISCONNECTED", "Idle");
-
-        // if (DEBUGMODE) {
-        //     console.log('Connection closed');
-        // }
     }
 
     /**
@@ -244,9 +273,10 @@ var startCalibration = function() {
             } else if (message.startsWith("AR_C1:")) {
                 addSample(message.substring(6), StateMachine.getState());
                 updateCalibrationStatus(0);
+                StateMachine.next(); // Advances to Start Calibration State
             }
 
-            StateMachine.begin();
+            // StateMachine.begin();
         } else {
 
             if (message.includes("AR_MC")) {
@@ -255,12 +285,13 @@ var startCalibration = function() {
                 $("#calibration-btn").prop("disabled", true);
                 setArduinoStatus("CONNECTED", "Calib");
 
-                StateMachine = new CalibrationFSM(); // Initialize State Machine and Begin
-                StateMachine.begin(); // Advances to Start Calibration State
+                StateMachine = new CalibrationFSM2(calibrationDictionary); // Initialize State Machine and Begin
+                calibrationRep = 0;
+                FSMIndex = 0;
+                StateMachine.setState(calibrationDictionary[FSMIndex]);
+                showCalibrationInformation(calibrationDictionary[FSMIndex]);
             } else {
-
                 conn.send("C");
-
             }
         }
     }
@@ -282,21 +313,10 @@ var startCalibration = function() {
             $('#loading').fadeOut("slow");
         });
 
-        var $gestureName = '';
-
-        if ($gesture == "CALIBUP") {
-            $gestureName = "Up";
-        } else if ($gesture == "CALIBDOWN") {
-            $gestureName = "Down";
-        } else if ($gesture == "CALIBLEFT") {
-            $gestureName = "Left";
-        } else if ($gesture == "CALIBRIGHT") {
-            $gestureName = "Right";
-        }
 
         var formData = {
             pair_id: '1',
-            gestureName: $gestureName,
+            gestureName: $gesture,
             sampleData: $sample,
         }
 

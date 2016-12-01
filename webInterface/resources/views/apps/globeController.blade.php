@@ -19,7 +19,7 @@
     </div><!-- /jumbotron white-jumbotron-center -->
 </body>
 
-<script src="https://d3js.org/topojson.v1.min.js"></script>
-<script src="https://d3js.org/queue.v1.min.js"></script>
+<script src="{{ asset('js/topojson.v1.min.js') }}"></script>
+<script src="{{ asset('js/queue.v1.min.js') }}"></script>
 <script src="{{ asset('js/globe.js') }}"></script>
 @endsection

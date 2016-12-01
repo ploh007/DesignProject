@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DeviceUser;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
@@ -22,7 +24,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         // Perform database check
@@ -35,6 +37,12 @@ class HomeController extends Controller
             $databaseStatus = true;
         }
 
-        return view('admin.controls', ['databaseTable' => $databaseStatus]);
+        // Perform user metrics check
+
+        $userDevicesCount = $request->user()->devices()->count();
+        $userID = $request->user()->id;
+        $sampleCount = DeviceUser::where('pivotuser_id','=',$userID)->first()->samples->count();
+
+        return view('admin.controls', ['databaseTable' => $databaseStatus, 'userDevices' => $userDevicesCount, 'userID' => $userID, 'sampleCount' => $sampleCount]);
     }
 }

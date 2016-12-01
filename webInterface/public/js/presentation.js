@@ -7,7 +7,7 @@ startPresentationBtn.addEventListener('click', function() { startPresentation() 
 var startPresentation = function() {
 
     // Create a Websocket
-    var conn = new WebSocket('ws://localhost:8080');
+    var conn = new WebSocket('ws://192.168.137.1:8080');
 
     conn.onopen = function(e) {
         console.log('Connected to server:', conn);

@@ -109,3 +109,23 @@
 .cssanimations .csstransforms #close {
     display: none;
 }
+
+#calibrationModal {
+    /*font-family: 'Open Sans';*/
+    font-size: 0.9em;
+}
+
+#gesture-list {
+        /*font-family: 'Open Sans';*/
+    font-size: 1em;
+}
+
+.table {
+    border-bottom:0px !important;
+}
+.table th, .table td {
+    border: 1px !important;
+}
+.fixed-table-container {
+    border:0px !important;
+}

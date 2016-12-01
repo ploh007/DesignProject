@@ -7,7 +7,7 @@ startGestureRecognitionBtn.addEventListener('click', function() { startGestureRe
 var startGestureRecognition = function() {
 
     // Create a Websocket
-    var conn = new WebSocket('ws://localhost:8080');
+    var conn = new WebSocket('ws://192.168.137.1:8080');
 
     conn.onopen = function(e) {
         console.log('Connected to server:', conn);
@@ -69,7 +69,7 @@ var updateGesturedPerformed = function(gesturePerformed) {
 }
 
 
-    function getGesture($sample) {
+    function getGesture(sample) {
 
         $.ajaxSetup({
             headers: {
@@ -86,7 +86,7 @@ var updateGesturedPerformed = function(gesturePerformed) {
         });
 
         var formData = {
-            sampleData: $sample,
+            sampleData: sample,
         }
 
         console.log(formData);
@@ -98,6 +98,9 @@ var updateGesturedPerformed = function(gesturePerformed) {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
+                // Display to the user the gesture which has been performed
+                updateGesturedPerformed(data.data);
+
             },
             error: function(data, responseText) {
                 console.log(data);

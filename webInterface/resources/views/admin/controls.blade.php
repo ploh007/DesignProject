@@ -9,7 +9,7 @@
         <h6 id="arduino-status-text"> Not Connected </h6>
         <h6 id="arduino-status-mode"> Mode: Idle </h6>
     </div><!-- /arduino-status -->
-    <div class="jumbotron red-jumbotron">
+    <div class="jumbotron red-jumbotron" id="admin-header">
         <div class="container">
             <h2>Admin Controls</h2>
             <p>Access information on the gesture control device networks</p>
@@ -25,7 +25,7 @@
             </div><!-- /row -->
             <hr></hr>
             <div class="row">
-                <h3>System Health Overview Information</h3>
+                <h3><span class="glyphicon glyphicon-cog"></span> System Health Overview Information</h3>
                 <div class="col-md-6">
                     <h4>System Status</h4>
                     <table class="table table-responsive table-bordered">
@@ -37,7 +37,7 @@
                         <tbody>
                             <tr>
                                 <td>Listening Server</td>
-                                <td></td>
+                                <td>192.168.137.1</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -63,17 +63,17 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Devices Online</td>
-                                <td></td>
+                                <td>Gesture Samples</td>
+                                <td>{{$sampleCount}}</td>
                                 
                             </tr>
                             <tr>
                                 <td>Paired Devices</td>
-                                <td></td>
+                                <td>{{$userDevices}}</td>
                             </tr>
                             <tr>
-                                <td>Total Devices</td>
-                                <td></td>
+                                <td>User ID</td>
+                                <td>{{$userID}}</td>
                             </tr>
                         </tbody>
                     </table>

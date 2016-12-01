@@ -119,11 +119,9 @@ class DeviceController extends Controller
     public function getSamples(Request $request)
     {
         // Data from User Mode
-        
-
         $gestureSamplesArray = array();
-
-        $rawSamples = DeviceUser::find(1)->samples;
+        $userID = $request->user()->id;
+        $rawSamples = DeviceUser::where('pivotuser_id','=',$userID)->first()->samples;
 
         // Get Samples and create FFT
         foreach ($rawSamples as $rawSample) {

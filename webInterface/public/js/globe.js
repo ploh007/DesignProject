@@ -172,7 +172,7 @@ var startGlobeMonitoring = function(){
 
 
         // Create a Websocket
-        var conn = new WebSocket('ws://localhost:8080');
+        var conn = new WebSocket('ws://192.168.137.1:8080');
 
         conn.onopen = function(e) {
             console.log('Connected to server:', conn);
@@ -200,6 +200,7 @@ var startGlobeMonitoring = function(){
             conn.close();
         }
 
+        // var dzTemp = 0;
 
         conn.onmessage = function(e) {
             
@@ -223,9 +224,17 @@ var startGlobeMonitoring = function(){
                     var partsOfStr = message.split(',');
                     if(globeMonitoring && (partsOfStr.length == 3)){
 
-                        var dx = partsOfStr[2]/3;
-                        var dy = partsOfStr[0]/3;
-                        // var dz = partsOfStr[2]*2;
+                        var dx = partsOfStr[0]/2;
+                        var dy = -partsOfStr[1]/2;
+                        // var dz;
+
+                        // if(dy > 0) {
+                        //     dzTemp = dzTemp+1;
+                        // } else {
+                        //     dzTemp = dzTemp-1;
+                        // }
+                        // console.log(partsOfStr);
+
                         var rotation = projection.rotate();
                         var radius = projection.scale();
                         var scale = d3.scale.linear()
@@ -241,7 +250,9 @@ var startGlobeMonitoring = function(){
 
                         // if (rotation[0] >= 180) rotation[0] -= 360;
                         projection.rotate(rotation);
-                        // projection.scale([degZ]);
+
+                        // console.log(dzTemp);
+                        // projection.scale([dzTemp]);
                         redraw();
 
                     }

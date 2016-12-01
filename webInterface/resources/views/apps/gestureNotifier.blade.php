@@ -13,7 +13,8 @@
             <h2>Gesture Notifier</h2>
             <h4>Notifies the user of the corresponding gesture which has been recognized.</h4>
             <button class="btn btn-lg custom-btn" id="startGestureRecognitionDemo">Start Demo</button>
-            <div class="panel-body" id="gesture_performed">
+            <div class="panel-body">
+                <h2 id="gesture_performed"></h2>
             </div><!-- /panel-body -->
         </div><!-- /container -->
     </div><!-- /jumbotron white-jumbotron-center -->

@@ -25,7 +25,7 @@ var CompleteCalibrationState = function(FSM) {
 var DownCalibrationState = function(FSM) {
     this.FSM = FSM;
     this.nextCalibration = function() {
-        if (calibrationRep > reqCalibrationReps) {
+        if (calibrationRep >= reqCalibrationReps) {
             calibrationRep = 0;
             FSM.trigger(new CompleteCalibrationState(FSM));
             FSM.setState("CALIBCOMPLETE");
@@ -91,7 +91,7 @@ var StartCalibrationState = function(FSM) {
 /**
  * Calibration Finite State Machine methods
  */
-var CalibrationFSM = function() {
+var CalibrationFSM = function($gestureTypes, $iterationCount) {
 
     /* Holds the state machine */
     var currentState = new StartCalibrationState(this);

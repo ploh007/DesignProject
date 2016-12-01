@@ -43,7 +43,7 @@ var startMonitoring = function() {
 
     // Create a Websocket
     try {
-        var conn = new WebSocket('ws://localhost:8080');
+        var conn = new WebSocket('ws://192.168.137.1:8080');
     } catch (e) {
         throw e;
     }
