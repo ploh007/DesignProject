@@ -6,9 +6,9 @@
     <div class="jumbotron red-jumbotron" id="home-jumbotron" data-wow-duration="2s">
         <div class="container">
             <h2>Gesture Control System</h2>
-            <p>
+            <h4>
                 Seamlessly intergrating gesture controls with your everyday devices. The *Gesture Control Device makes interacting with your devices easier than ever.
-            </p>
+            </h4>
             
         </div><!-- /container -->
 <!--         <svg version="1.1" id="gesture_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 59.066 59.066" style="enable-background:new 0 0 59.066 59.066;" xml:space="preserve" width="128px" height="128px">
@@ -31,10 +31,12 @@
             <!-- /gesture_icon -->
     </div><!-- /jumbotron red-jumbotron -->
 
-    <div class="white-jumbotron-center" data-wow-duration="2s">
+    <div class="white-jumbotron-center" id="component-jumbotron" data-wow-duration="2s">
+
         <div class="container">
             <div class="row featurette">
-                <h2>Core Components</h2>
+                <hr></hr>
+                <h2>CORE COMPONENTS</h2>
                 <hr></hr>
                 <div class="col-md-4">
                     <div class="thumbnail">
@@ -64,8 +66,8 @@
     <div class="jumbotron red-jumbotron" data-wow-duration="2s">
         <div class="container">
             <div class="row featurette">
-                <h2>How It Works</h2>
-                <p>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</p>
+                <h2>HOW IT WORKS</h2>
+                <h5>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</h5>
             </div><!-- /row featurette -->                
         </div><!-- /container -->
     </div><!-- /white-jumbotron-center -->
@@ -74,11 +76,11 @@
         <div class="container">
             <div class="col-md-6">
                 <button class="btn btn-lg custom-btn btn-block">Follow This Project</button>
-                <p>Get weekly updates on how this project is progressing through email updates. We strive to provide details on issues,technical approaches and research that we have done to meet our weekly goals and objectives</p>
+                <h5>Get weekly updates on how this project is progressing through email updates. We strive to provide details on issues,technical approaches and research that we have done to meet our weekly goals and objectives</h5>
             </div><!-- /row featurette -->                
             <div class="col-md-6">
                 <button class="btn btn-lg custom-btn btn-block">Contribute To This Project</button>
-                <p>Fork our project on Gitub and get your hands into the nitty ritty of the codebase. See a bug? See a way to optimize and increase the performance of the system? Let us know and we ‘d love to work with you! </p>
+                <h5>Fork our project on Gitub and get your hands into the nitty gritty of the codebase. See a bug? See a way to optimize and increase the performance of the system? Let us know and we‘d love to work with you! </h5>
             </div><!-- /row featurette -->                
         </div><!-- /container -->
     </div><!-- /white-jumbotron-center -->

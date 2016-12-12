@@ -31,34 +31,17 @@ var startGestureRecognition = function() {
     }
 
     conn.onmessage = function(e) {
-
         var message = e.data;
-
-        if (message.startsWith("AR_U:")) {
-            getGesture(message.substring(5));
-            // if (demoStarted) {
-
-            //     if (message == "ARDUINOLEFT") {
-            //         updateGesturedPerformed("<div class='alert alert-success' role='alert'>ARDUINOLEFT</div>");
-            //     } else if (message == "ARDUINOUP") {
-            //         updateGesturedPerformed("<div class='alert alert-success' role='alert'>ARDUINOUP</div>");
-            //     } else if (message == "ARDUINODOWN") {
-            //         updateGesturedPerformed("<div class='alert alert-success' role='alert'>ARDUINODOWN</div>");
-            //     } else if (message == "ARDUINORIGHT") {
-            //         updateGesturedPerformed("<div class='alert alert-success' role='alert'>ARDUINORIGHT</div>");
-            //     } else if (message == "ARDUINONOGESTURE"){
-            //         updateGesturedPerformed("<div class='alert alert-warning' role='alert'>NOGESTURE</div>");
-            //     }
-            // } else {
-            //     if (message == "ARDUINOMODECALIB") {
-            //         conn.send("SETMODEUSER");
-            //     } else if (message == "ARDUINOMODERAW") {
-            //         conn.send("SETMODEUSER");
-            //     } else if (message == "ARDUINOMODEUSER") {
-            //         demoStarted = true;
-            //         setArduinoStatus("CONNECTED", "User");
-            //     }
-            // }
+        if (demoStarted) {
+            if (message.startsWith("AR_U:")) {
+                getGesture(message.substring(5));
+            }
+        } else {
+            if (message.includes("AR_MU")) {
+                demoStarted = true;
+            } else {
+                conn.send('U');
+            }
         }
     }
 }
@@ -69,42 +52,42 @@ var updateGesturedPerformed = function(gesturePerformed) {
 }
 
 
-    function getGesture(sample) {
+function getGesture(sample) {
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        })
-
-        $(document).ajaxStart(function() {
-            $('#loading').fadeIn("slow");
-        });
-
-        $(document).ajaxStop(function() {
-            $('#loading').fadeOut("slow");
-        });
-
-        var formData = {
-            sampleData: sample,
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    })
 
-        console.log(formData);
+    $(document).ajaxStart(function() {
+        $('#loading').fadeIn("fast");
+    });
 
-        $.ajax({
-            type: 'POST',
-            url: "./gesture-get",
-            data: formData,
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                // Display to the user the gesture which has been performed
-                updateGesturedPerformed(data.data);
+    $(document).ajaxStop(function() {
+        $('#loading').fadeOut("fast");
+    });
 
-            },
-            error: function(data, responseText) {
-                console.log(data);
-                console.log(responseText);
-            }
-        });
-    };
+    var formData = {
+        sampleData: sample,
+    }
+
+    console.log(formData);
+
+    $.ajax({
+        type: 'POST',
+        url: "./gesture-get",
+        data: formData,
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+            // Display to the user the gesture which has been performed
+            updateGesturedPerformed(data.data);
+
+        },
+        error: function(data, responseText) {
+            console.log(data);
+            console.log(responseText);
+        }
+    });
+};

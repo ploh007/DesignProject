@@ -178,7 +178,7 @@ var startGlobeMonitoring = function(){
             console.log('Connected to server:', conn);
 
             // Fetch the mode in which the arduino is in
-            conn.send("GETMODE");
+            conn.send("R");
         }
 
         conn.onerror = function(e) {
@@ -206,57 +206,30 @@ var startGlobeMonitoring = function(){
             
             var message = e.data;
             
-            // if(message.startsWith("ARDUINO")){
-            //     if(message == "ARDUINOMODERAW"){
-            //         $("#startGlobeBtn").html("Stop Discovering");
-                    globeMonitoring = true;
-                    // $(".line").css("stroke", "red");
-                    setArduinoStatus("CONNECTED", "RAW");
-            //     } else if(message == "ARDUINOMODECALIB"){
-            //         conn.send("SETMODERAW");
-            //     } else if(message == "ARDUINOMODEUSER"){
-            //         conn.send("SETMODERAW");
-            //     }
-            // } else {
+            globeMonitoring = true;
+            setArduinoStatus("CONNECTED", "RAW");
 
-                if (globeMonitoring){
+            if (globeMonitoring){
+                var partsOfStr = message.split(',');
+                if(globeMonitoring && (partsOfStr.length == 3)){
 
-                    var partsOfStr = message.split(',');
-                    if(globeMonitoring && (partsOfStr.length == 3)){
+                    var dx = partsOfStr[0]/2;
+                    var dy = -partsOfStr[1]/2;
 
-                        var dx = partsOfStr[0]/2;
-                        var dy = -partsOfStr[1]/2;
-                        // var dz;
+                    var rotation = projection.rotate();
+                    var radius = projection.scale();
+                    var scale = d3.scale.linear()
+                        .domain([-1 * radius, radius])
+                        .range([-90, 90]);
+                    var degX = scale(dx);
+                    var degY = scale(dy);
+                    rotation[0] += degX;
+                    rotation[1] -= degY;
 
-                        // if(dy > 0) {
-                        //     dzTemp = dzTemp+1;
-                        // } else {
-                        //     dzTemp = dzTemp-1;
-                        // }
-                        // console.log(partsOfStr);
+                    projection.rotate(rotation);
+                    redraw();
 
-                        var rotation = projection.rotate();
-                        var radius = projection.scale();
-                        var scale = d3.scale.linear()
-                            .domain([-1 * radius, radius])
-                            .range([-90, 90]);
-                        var degX = scale(dx);
-                        var degY = scale(dy);
-                        rotation[0] += degX;
-                        rotation[1] -= degY;
-                        
-                        // if (rotation[1] > 90)   rotation[1] = 90;
-                        // if (rotation[1] < -90)  rotation[1] = -90;
-
-                        // if (rotation[0] >= 180) rotation[0] -= 360;
-                        projection.rotate(rotation);
-
-                        // console.log(dzTemp);
-                        // projection.scale([dzTemp]);
-                        redraw();
-
-                    }
-                // }
+                }
             }
         }
 

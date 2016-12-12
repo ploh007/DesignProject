@@ -141,36 +141,13 @@ var showCalibrationInformation = function(gestureType) {
 
     hideCalibrationNotifier();
 
-    // if (gestureType == "Right") {
-    //     setCalibrationNotifier("Calibration for Right Gesture");
-    //     setCalibrationImage("<h2><img src='assets/images/swipe-helper.gif' width=200px></h2>");
-    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe right motion.");
-    // } else if (gestureType == "Left") {
-    //     setCalibrationNotifier("Calibration for Left Gesture");
-    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe left motion.");
-    // } else if (gestureType == "Down") {
-    //     setCalibrationNotifier("Calibration for Down Gesture");
-    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe down motion.");
-    // } else if (gestureType == "Up") {
-    //     setCalibrationNotifier("Calibration for Up Gesture");
-    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-    //     setCalibrationInstructions(" Hold the Gesture Control Device and perform the swipe Up motion.");
-    // } else if (gestureType == "Complete") {
-    //     setCalibrationNotifier("Calibration Process Complete");
-    //     setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
-    //     setCalibrationInstructions(" Calibration Process Complete");
-    // }
-
-
     if (gestureType == "Complete") {
         setCalibrationNotifier("Calibration Process Complete");
         setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
         setCalibrationInstructions(" Calibration Process Complete");
     } else {
         setCalibrationNotifier("Calibration " + gestureType);
-        // setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
+        setCalibrationImage("<h2><img src='assets/images/swipe_left.gif' width=200px></h2>");
         setCalibrationInstructions(" Hold the Gesture Control Device and perform the "+ gestureType +" motion.");
     }
 
@@ -183,9 +160,11 @@ var addToGestureList  = function(){
     var gestureToAdd = $('#customGestureName').val();
 
     if(gestureToAdd.trim() === ""){
-        $('#customGestureName').addClass('btn-danger');
+        $('#customBtnGroup').addClass('has-error');
+        $('#gestureControlsMessage').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Error! Please enter a gesture name to add! </div>');
     } else {
-        $('#customGestureName').removeClass('btn-danger');
+        $('#customBtnGroup').removeClass('has-error');
+        $('#gestureControlsMessage').html('');
         $('#gesture-list').append('<option value="'+ gestureToAdd.toLowerCase() +'">'+ gestureToAdd +'</option>');
     }
 }
@@ -202,18 +181,10 @@ var startCalibration = function() {
 
     var index = 0;
 
-    $("#gesture-list option").each(function()
-    {
-        // Add $(this).val() to your list
-        console.log($(this).val());
+    $("#gesture-list option").each(function() {
         calibrationDictionary[parseInt(index)] = $(this).val();
         index++;
-        // Make a dictionary for the FSM to use
-
-
     });
-
-    console.log(calibrationDictionary);
 
     // Instatiate a new Calibration FSM
     var StateMachine;
@@ -284,8 +255,7 @@ var startCalibration = function() {
 
                 $("#calibration-btn").prop("disabled", true);
                 setArduinoStatus("CONNECTED", "Calib");
-
-                StateMachine = new CalibrationFSM2(calibrationDictionary); // Initialize State Machine and Begin
+                StateMachine = new CalibrationFSM(calibrationDictionary); // Initialize State Machine and Begin
                 calibrationRep = 0;
                 FSMIndex = 0;
                 StateMachine.setState(calibrationDictionary[FSMIndex]);
@@ -315,12 +285,9 @@ var startCalibration = function() {
 
 
         var formData = {
-            pair_id: '1',
             gestureName: $gesture,
             sampleData: $sample,
         }
-
-        console.log(formData);
 
         $.ajax({
             type: 'POST',
@@ -328,11 +295,11 @@ var startCalibration = function() {
             data: formData,
             dataType: 'json',
             success: function(data) {
-                console.log(data);
+                // console.log(data);
             },
             error: function(data, responseText) {
-                console.log(data.responseJSON);
-                console.log(responseText);
+                // console.log(data.responseJSON);
+                // console.log(responseText);
             }
         });
     };

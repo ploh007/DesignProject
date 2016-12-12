@@ -40,6 +40,13 @@
     overflow: hidden;
 }
 
+#calibrationSettingsHeader {
+    background-color: #c0392b;
+    border-bottom: 3px solid #000;
+    color: #fff;
+}
+
+
 /**
  * CSS Style for Calibration Button Hover Action
  */
@@ -111,13 +118,7 @@
 }
 
 #calibrationModal {
-    /*font-family: 'Open Sans';*/
     font-size: 0.9em;
-}
-
-#gesture-list {
-        /*font-family: 'Open Sans';*/
-    font-size: 1em;
 }
 
 .table {
@@ -128,4 +129,14 @@
 }
 .fixed-table-container {
     border:0px !important;
+}
+
+.custom-input {
+    height: 30px;
+}
+
+.label-white {
+    background-color: #fff;
+    color: #333;
+    border: 0px;
 }

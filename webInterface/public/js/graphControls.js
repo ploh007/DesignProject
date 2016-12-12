@@ -77,34 +77,20 @@ var startMonitoring = function() {
     }
 
     conn.onmessage = function(e) {
-        // conn.send("HELLO");
-        console.log(e.data);
         var message = e.data;
-        // if (message.startsWith("ARDUINO")) {
-        //     if (message == "ARDUINOMODERAW") {
-        //         $("#startMonBtn").html("Stop Monitoring");
-                monitoringIsAlive = true;
-                $(".line").css("stroke", "red");
-                setArduinoStatus("CONNECTED", "Raw");
-            // } else if (message == "ARDUINOMODECALIB") {
-            //     conn.send("SETMODERAW");
-            // } else if (message == "ARDUINOMODEUSER") {
-            //     conn.send("SETMODERAW");
-            // }
-        // } else {
-            if (monitoringIsAlive) {
-                var partsOfStr = message.split(',');
-                if (monitoringIsAlive && (partsOfStr.length == 3)) {
-                    shiftUpdateGraph(partsOfStr[0], partsOfStr[1], partsOfStr[2]);
-                    // vals[0] = partsOfStr[0];
-                    // vals[1] = partsOfStr[1];
-                    // vals[2] = partsOfStr[2];
 
-                } else {
-                    shiftUpdateGraph(0, 0, 0);
-                }
+        if (monitoringIsAlive) {
+            var partsOfStr = message.split(',');
+            if (monitoringIsAlive && (partsOfStr.length == 3)) {
+                shiftUpdateGraph(partsOfStr[0], partsOfStr[1], partsOfStr[2]);
+            } else {
+                shiftUpdateGraph(0, 0, 0);
             }
-        // }
+        } else {
+            monitoringIsAlive = true;
+            $(".line").css("stroke", "red");
+            setArduinoStatus("CONNECTED", "Raw");
+        }
     }
 }
 

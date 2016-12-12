@@ -9,4 +9,5 @@
 var runSystemCheck = document.getElementById("initateSystemCheck");
 runSystemCheck.addEventListener("click", function() {});
 
-
+new WOW().init();
+// $("#admin-header").addClass("wow fadeInDown");

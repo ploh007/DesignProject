@@ -1,113 +1,9 @@
-/**
- * Calibration Finite State Machine
- * @author Paul Loh
- * @author Jordan Hatcher
- * @version 1.0
- */
-
-/* Calibration States for FSM
- * Start >> Up >> Down >> Left >> Right >> Complete
- */
-
-/* Complete Calibration State
- */
-var CompleteCalibrationState = function(FSM) {
-    this.FSM = FSM;
-    calibrationStarted = false;
-
-    // Enable Calibration Button
-    $("#calibration-btn").prop("disabled", false);
-    $("#calibration-counter").html("");
-};
-
-/* Down Calibration State
- */
-var DownCalibrationState = function(FSM) {
-    this.FSM = FSM;
-    this.nextCalibration = function() {
-        if (calibrationRep >= reqCalibrationReps) {
-            calibrationRep = 0;
-            FSM.trigger(new CompleteCalibrationState(FSM));
-            FSM.setState("CALIBCOMPLETE");
-            showCalibrationInformation("Complete");
-        }
-    }
-};
-
-/* Up Calibration State
- */
-var UpCalibrationationState = function(FSM) {
-    this.FSM = FSM;
-    this.nextCalibration = function() {
-        if (calibrationRep >= reqCalibrationReps) {
-            calibrationRep = 0;
-            FSM.trigger(new DownCalibrationState(FSM));
-            FSM.setState("CALIBDOWN");
-            showCalibrationInformation("Down");
-        }
-    }
-};
-
-/* Right Calibration State
- */
-var RightCalibrationState = function(FSM) {
-    this.FSM = FSM;
-    this.nextCalibration = function() {
-        if (calibrationRep >= reqCalibrationReps) {
-            calibrationRep = 0;
-            FSM.trigger(new UpCalibrationationState(FSM));
-            FSM.setState("CALIBUP");
-            showCalibrationInformation("Up");
-        }
-    }
-};
-
-/* Left Calibration State
- */
-var LeftCalibrationState = function(FSM) {
-    this.FSM = FSM;
-    this.nextCalibration = function() {
-        if (calibrationRep >= reqCalibrationReps) {
-            calibrationRep = 0;
-            FSM.trigger(new RightCalibrationState(FSM));
-            FSM.setState("CALIBRIGHT");
-            showCalibrationInformation("Right");
-        }
-    }
-};
-
-/* Start Calibration State
- */
-var StartCalibrationState = function(FSM) {
-    this.FSM = FSM;
-    this.nextCalibration = function() {
-        FSM.trigger(new LeftCalibrationState(FSM));
-        FSM.setState("CALIBLEFT");
-        showCalibrationInformation("Left");
-    }
-}
-
-
-/**
- * Calibration Finite State Machine methods
- */
-var CalibrationFSM = function($gestureTypes, $iterationCount) {
+var CalibrationFSM = function(calibrationDictionary) {
 
     /* Holds the state machine */
-    var currentState = new StartCalibrationState(this);
-
+    var currentState = "";
     /* Contains the state value as a string value */
     var currentStateVal = "";
-
-    // Function called when calibration for one state is complete
-    this.trigger = function(state) {
-        // Reinstantiate required calibration count
-        currentState = state;
-    }
-
-    this.begin = function() {
-        currentState.nextCalibration();
-    }
 
     this.getState = function() {
         return currentStateVal;
@@ -115,5 +11,31 @@ var CalibrationFSM = function($gestureTypes, $iterationCount) {
 
     this.setState = function(stateString) {
         currentStateVal = stateString;
+    }
+
+    this.next = function() {
+        console.log("CAL"+calibrationRep);
+        console.log("REQ"+reqCalibrationReps);
+        
+        console.log("DIC" + Object.keys(calibrationDictionary).length);
+        console.log("FSM" + FSMIndex);
+
+            if (calibrationRep == reqCalibrationReps) {
+                FSMIndex = FSMIndex + 1;
+                if(FSMIndex > Object.keys(calibrationDictionary).length-1){
+                    $("#calibration-btn").prop("disabled", false);
+                    $("#calibration-counter").html("");
+                    calibrationStarted = false;
+                    showCalibrationInformation('Complete');
+                    conn.close();
+                } else {
+                    this.setState(calibrationDictionary[FSMIndex]);
+                    showCalibrationInformation(calibrationDictionary[FSMIndex]);
+                    calibrationRep = 0;
+                    $("#calibration-counter").html("Calibrated: " + calibrationRep + "/" + reqCalibrationReps);
+                }
+            }   else {
+                $("#calibration-counter").html("Calibrated: " + calibrationRep + "/" + reqCalibrationReps);
+            }
     }
 };

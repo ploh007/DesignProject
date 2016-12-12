@@ -11,13 +11,11 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css/common.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/jquery-1.11.3.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.1.0.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/d3.min.js') }}"></script>
     <script src="{{ asset('js/wow.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
-    <!-- <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> -->
-    <!-- <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'> -->
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -34,37 +32,33 @@
         </div><!-- /navbar-header -->
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
-                <li><a href="help"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
+                <li><a href="{{ url('/home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
+                <li><a href="{{ url('/help') }}"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
                 @if (Auth::guest())
                     <li>
-                        <a href="admin"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a>
+                        <a href="{{ url('/admin') }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a>
                     </li>
                     <li><a href="{{ url('/register') }}">Register</a></li>
                 @endif
                 @if (!Auth::guest())
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tests <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('/database') }}">Database Test</a></li>
-                        </ul><!-- /dropdown-menu -->
-                    </li><!-- /dropdown -->
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span> Demo <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="gestureNotifier">Gesture Notifier</a></li>
-                            <li><a href="globeController">Globe Controller</a></li>
-                            <li><a href="graph">Graph Controller</a></li>
+                            <li><a href="{{ url('/gestureNotifier') }}">Gesture Notifier</a></li>
+                            <li><a href="{{ url('/globeController') }}">Globe Controller</a></li>
+                            <li><a href="{{ url('/graph') }}">Graph Controller</a></li>
+                            <li><a href="../game/">Demo Game</a></li>
+                            <li><a href="../2048/">Demo 2048</a></li>
                         </ul><!-- /dropdown-menu -->
                     </li><!-- /dropdown -->
-                    <li><a href="presentation"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> Presentation</a></li>
-                    <li><a href="calibration"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Calibration</a></li>
+                    <li><a href="{{ url('/presentation') }}"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> Presentation</a></li>
+                    <li><a href="{{ url('/calibration') }}"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Calibration</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="admin">Admin Controls</a></li>
+                            <li><a href="{{ url('/admin') }}">Admin Controls</a></li>
                             <li>
                                 <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                 <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">

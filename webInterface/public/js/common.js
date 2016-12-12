@@ -4,7 +4,7 @@
  * @author Jordan Hatcher
  * @version 1.0
  */
-
+ 
 /*
  * Sets the arduino status mode
  * @param {string} arduinoStatus - The status to set the arduino to (CONNECTED/DISCONNECTED)

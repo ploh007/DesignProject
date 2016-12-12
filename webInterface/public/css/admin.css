@@ -10,6 +10,40 @@
  */
 
 table {
-    font-size: 0.9em;
+/*    font-size: 0.9em;*/
+}
+
+.list-group-item {
+    opacity: 0;
+    border: 0px;
+}
+
+ul.list-group li:nth-child(1){
+    -webkit-animation: fadeInDown 0.4s ease-in forwards;
+}
+ul.list-group li:nth-child(2){
+    -webkit-animation: fadeInDown 0.4s ease-in 0.25s forwards;
+}
+ul.list-group li:nth-child(3){
+    -webkit-animation: fadeInDown 0.4s ease-in 0.5s forwards;
+}
+ul.list-group li:nth-child(4){
+    -webkit-animation: fadeInDown 0.4s ease-in 0.75s forwards;
+}
+
+@-webkit-keyframes fade {
+	100% { opacity: 1; }
+}
+
+@-moz-keyframes fade {
+	100% { opacity: 1; }
+}
+
+@-o-keyframes fade {
+	100% { opacity: 1; }
+}
+
+@keyframes fade {
+	100% { opacity: 1; }
 }
 

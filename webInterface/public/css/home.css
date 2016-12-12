@@ -13,13 +13,8 @@
   background: url(../img/bg2.jpg) no-repeat;
   background-size: auto;
   border-bottom: 10px solid #c0392b;
-  min-height: 60vh;
+  min-height: 450px;
 }
-
-/*.black-jumbotron {
-  background-color:#000;
-  color: #fff;
-}*/
 
 #home-jumbotron .container {
   background-color: rgba(0,0,0,0.7);
@@ -28,6 +23,19 @@
   padding: 20px;
 }
 
+#component-jumbotron {
+  background: url(../img/bg5.jpg) no-repeat;
+  background-size: cover;
+  border-bottom: 10px solid #c0392b;
+}
+
+#component-jumbotron:after {
+  background: rgba(0,0,0,0.3);
+}
+
+.thumbnail {
+  background-color: transparent;
+}
 
 @keyframes draw {
   to {

@@ -13,7 +13,7 @@ var startPresentation = function() {
         console.log('Connected to server:', conn);
         // $('#startGestureRecognitionDemo').hide();
         // Fetch the mode in which the arduino is in
-        conn.send("GETMODE");
+        conn.send("U");
     }
 
     conn.onerror = function(e) {
@@ -24,35 +24,22 @@ var startPresentation = function() {
     }
 
     conn.onclose = function(e) {
-        conn.send("SETMODEUSER");
+        // conn.send("SETMODEUSER");
         setArduinoStatus("DISCONNECTED", "Idle");
         console.log('Connection closed');
         // $('#startGestureRecognitionDemo').show();
     }
 
     conn.onmessage = function(e) {
-
         var message = e.data;
-
-        if (message.startsWith("ARDUINO")) {
-            if (presentationStarted) {
-
-                if (message == "ARDUINOLEFT") {
-                    moveCarousel("LEFT");
-                } else if (message == "ARDUINORIGHT") {
-                    moveCarousel("RIGHT");
-                } else {
-                    //
-                }
-            } else {
-                if (message == "ARDUINOMODECALIB") {
-                    conn.send("SETMODEUSER");
-                } else if (message == "ARDUINOMODERAW") {
-                    conn.send("SETMODEUSER");
-                } else if (message == "ARDUINOMODEUSER") {
-                    presentationStarted = true;
-                    setArduinoStatus("CONNECTED", "User");
-                }
+        if (presentationStarted) {
+            if (message.startsWith("AR_U:")) {
+                getGesture(message.substring(5));
+            }
+        } else {
+            if (message.includes("AR_MU")) {
+                presentationStarted = true;
+                setArduinoStatus("CONNECTED", "User");
             }
         }
     }
@@ -60,9 +47,43 @@ var startPresentation = function() {
 
 // Updates the HTML
 var moveCarousel = function(direction) {
-    if (direction == "RIGHT") {
+    if (direction == "left") {
         $('.carousel').carousel('next');
-    } else {
+    } else if (direction == "right"){
         $('.carousel').carousel('prev');
     }
 }
+
+function getGesture(sample) {
+
+    $(document).ajaxStart(function() {
+        $('#loading').fadeIn("fast");
+    });
+
+    $(document).ajaxStop(function() {
+        $('#loading').fadeOut("fast");
+    });
+
+    var formData = {
+        sampleData: sample,
+    }
+
+    console.log(formData);
+
+    $.ajax({
+        type: 'POST',
+        url: "./gesture-get",
+        data: formData,
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+            // Display to the user the gesture which has been performed
+            moveCarousel(data.data);
+
+        },
+        error: function(data, responseText) {
+            console.log(data);
+            console.log(responseText);
+        }
+    });
+};

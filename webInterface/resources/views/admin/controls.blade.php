@@ -9,71 +9,62 @@
         <h6 id="arduino-status-text"> Not Connected </h6>
         <h6 id="arduino-status-mode"> Mode: Idle </h6>
     </div><!-- /arduino-status -->
+
     <div class="jumbotron red-jumbotron" id="admin-header">
         <div class="container">
             <h2>Admin Controls</h2>
             <p>Access information on the gesture control device networks</p>
         </div><!-- /container -->
     </div><!-- /jumbotron red-jumbotron -->
+
     <div class="container">
         <div class="panel-body">
-            <h4>Admin System Controls</h4>
+            
             <div class="row">
                 <div class="col-md-3">
-                    <button class="btn custom-btn btn-lg btn-block" id="initateSystemCheck">Run System Check</button>
-                </div><!-- /col-md-3 -->
-            </div><!-- /row -->
-            <hr></hr>
-            <div class="row">
-                <h3><span class="glyphicon glyphicon-cog"></span> System Health Overview Information</h3>
-                <div class="col-md-6">
-                    <h4>System Status</h4>
+                    <h3><span class="glyphicon glyphicon-user"></span> System Controls</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a class="btn custom-btn btn-block" id="initateSystemCheck">Run System Check</a></li>
+
+                        <li class="list-group-item"><a class="btn custom-btn btn-block" href="calibration">Run Calibration Sequence</a></li>
+
+                        <li class="list-group-item"><a class="btn custom-btn btn-block" href="pairing">Pair With A Device</a></li>
+
+                        <!-- <li class="list-group-item"><a class="btn custom-btn btn-block" href="pairing"> Device</a></li> -->
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    <h3><span class="glyphicon glyphicon-cog"></span> System Overview</h3>
                     <table class="table table-responsive table-bordered">
                         <thead>
-                            <th>System Component</th>
+                            <th>Component</th>
                             <th>Status</th>
-                            <th>Error Message</th>
+                            <th>Description</th>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Listening Server</td>
+                                <td >Listening Server</td>
                                 <td>192.168.137.1</td>
-                                <td></td>
+                                <td>The IP Address of the system server which facilitates the web socket protocol communication.</td>
                             </tr>
                             <tr>
                                 <td>Database Status</td>
                                 @if ($databaseTable)
                                     <td class="success">No Issues</td>
-                                    <td></td>
                                 @else
                                     <td class="danger">Error</td>
-                                    <td></td>
                                 @endif
+                                <td>The status of the database connections, data integrity and database tables.</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div><!-- /col-md-6 -->
-                <div class="col-md-6">
-                    <h4>Data Metrics</h4>
-                    <table class="table table-responsive table-bordered">
-                        <thead>
-                            <th>System Component</th>
-                            <th>Value</th>
-                            
-                        </thead>
-                        <tbody>
                             <tr>
                                 <td>Gesture Samples</td>
                                 <td>{{$sampleCount}}</td>
-                                
+                                <td>The total number of calibration samples that has been done for all devices.</td>
                             </tr>
                             <tr>
                                 <td>Paired Devices</td>
                                 <td>{{$userDevices}}</td>
-                            </tr>
-                            <tr>
-                                <td>User ID</td>
-                                <td>{{$userID}}</td>
+                                <td>The total number of devices which have been paired with.</td>
                             </tr>
                         </tbody>
                     </table>

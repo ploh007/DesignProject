@@ -121,7 +121,7 @@ class DeviceController extends Controller
         // Data from User Mode
         $gestureSamplesArray = array();
         $userID = $request->user()->id;
-        $rawSamples = DeviceUser::where('pivotuser_id','=',$userID)->first()->samples;
+        $rawSamples = DeviceUser::where('pivotuser_id', '=', $userID)->first()->samples;
 
         // Get Samples and create FFT
         foreach ($rawSamples as $rawSample) {
@@ -170,12 +170,16 @@ class DeviceController extends Controller
         //     'sampleData' => 'required',
         // ]);
 
-
-
         $sample = new Sample;
         $sample->gestureName = $request->gestureName;
         $sample->sampleData = $request->sampleData;
-        $sample->pair_id = $request->pair_id;
+
+        $userID = $request->user()->id;
+        $pair_id = DeviceUser::where('pivotuser_id', '=', $userID)->first()->pair_id;
+
+        $sample->pair_id = $pair_id;
+
+
         $sample->save();
 
         return response()->json([

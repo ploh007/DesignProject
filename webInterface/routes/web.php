@@ -54,7 +54,7 @@ Route::get('/graph', function () {
 });
 
 
-Route::get('/database', "DeviceController@index");
+Route::get('/pairing', "DeviceController@index");
 Route::get('/loadsamples', "DeviceController@getSamples");
 
 Route::post('/database-show', 'DeviceController@showDevices');
@@ -64,5 +64,6 @@ Route::post('/database-unpair', 'DeviceController@unpairDevice');
 Route::post('/loadsamples2', "DeviceController@saveSample");
 Route::post('/samples-add', "DeviceController@createSample");
 Route::post('/gesture-get', "DeviceController@getSamples");
+
 
 Auth::routes();
