@@ -64,7 +64,7 @@
                                 <div class="caption">
                                     <h4>Paul Loh</h4>
                                     <p>Paul is a fourth year Computer Engineering Student at the University of Ottawa.</p>
-                                    <p><a href="www.paulloh.com">www.paulloh.com</a></p>
+                                    <p><a target="new_blank" href="http://www.paulloh.com">www.paulloh.com</a></p>
                                 </div><!-- /caption -->
                             </div><!-- /col-sm-6 col-md-6 -->
                         </div><!-- /row -->

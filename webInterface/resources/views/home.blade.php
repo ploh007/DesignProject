@@ -1,17 +1,16 @@
-@extends('common.basic')
-@section('content')
+@extends('common.basic') @section('content')
 <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 
 <body>
     <div class="jumbotron red-jumbotron" id="home-jumbotron" data-wow-duration="2s">
         <div class="container">
-            <h2>Gesture Control System</h2>
-            <h4>
-                Seamlessly intergrating gesture controls with your everyday devices. The *Gesture Control Device makes interacting with your devices easier than ever.
-            </h4>
-            
-        </div><!-- /container -->
-<!--         <svg version="1.1" id="gesture_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 59.066 59.066" style="enable-background:new 0 0 59.066 59.066;" xml:space="preserve" width="128px" height="128px">
+            <h1>Gesture Control System</h1>
+            <p>
+                Seamlessly intergrating gesture controls with your everyday devices. The Gesture Control Device makes interacting with your devices easier than ever.
+            </p>
+        </div>
+        <!-- /container -->
+        <!--         <svg version="1.1" id="gesture_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 59.066 59.066" style="enable-background:new 0 0 59.066 59.066;" xml:space="preserve" width="128px" height="128px">
                 <path id="case" d="M52.844,27.116C52.412,26.396,51.689,26,50.805,26c-0.004,0-0.008,0-0.012,0c-1.667,0.006-3.673,0.667-5.235,1.724
                     c-1.441,0.975-3.53,2.782-5.293,5.863c-0.331,0.578-0.874,0.97-1.455,1.063c-0.002-0.134-0.001-0.287-0.001-0.432
                     c0-0.309,0.001-0.677-0.012-1.083V11c0-2.206-1.794-4-4-4s-4,1.794-4,4v15.5c0,0.275-0.225,0.5-0.5,0.5s-0.5-0.225-0.5-0.5V4
@@ -28,62 +27,115 @@
                     c1.361-0.031,2.655-0.833,3.376-2.092c1.571-2.748,3.41-4.344,4.677-5.199c1.232-0.834,2.851-1.376,4.123-1.381
                     c0.001,0,0.003,0,0.004,0c0.214,0,0.263,0.063,0.292,0.1C51.294,28.35,51.303,28.979,51.256,29.259z" fill="#c0392b" />
             </svg> -->
-            <!-- /gesture_icon -->
-    </div><!-- /jumbotron red-jumbotron -->
-
-    <div class="white-jumbotron-center" id="component-jumbotron" data-wow-duration="2s">
-
-        <div class="container">
+        <!-- /gesture_icon -->
+    </div>
+    <!-- /jumbotron red-jumbotron -->
+    <div class="jumbotron white-jumbotron-center" id="component-jumbotron" data-wow-duration="2s">
+        <div class="row sectional-heading-line">
+            <div class="sectional-heading text-left">
+                <h3>Core Components</h3>
+            </div>
+        </div>
+        <div class="container ">
             <div class="row featurette">
-                <hr></hr>
-                <h2>CORE COMPONENTS</h2>
-                <hr></hr>
+                <!-- <hr></hr> -->
                 <div class="col-md-4">
-                    <div class="thumbnail">
+                    <div class="thumbnail img-responsive">
                         <img src="{{ asset('img/arduino-3d.png') }}" width="180px">
-                    </div><!-- /thumbnail -->
-                    <a href="https://www.arduino.cc/en/Main/ArduinoBoardUno" class="btn btn-lg custom-btn btn-block">Arduino Uno</a>
-                    <h5>The Arduino Uno offers a plethora of prototyping methods at an affordable cost. </h5>
-                </div><!-- /col-md-6 -->
+                    </div>
+                    <!-- /thumbnail -->
+                    <a href="https://www.arduino.cc/en/Main/ArduinoBoardUno" class="btn btn-lg custom-btn btn-block"><h4>Arduino Uno</h4></a>
+                    <p>The Arduino Uno offers a plethora of prototyping methods at an affordable cost. </p>
+                </div>
+                <!-- /col-md-6 -->
                 <div class="col-md-4">
-                    <div class="thumbnail">
+                    <div class="thumbnail img-responsive">
                         <img src="{{ asset('img/adxl345-3d.png') }}" width="180px">
-                    </div><!-- /thumbnail -->
-                    <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block">SparkFun ADXL 345</a>
-                    <h5>The ADXL 345 allows measuring of acceleration data in 3 different axes (X,Y,Z). </h5>
-                </div><!-- /col-md-6 -->
+                    </div>
+                    <!-- /thumbnail -->
+                    <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block"><h4>SparkFun ADXL 345</h4></a>
+                    <p>The ADXL 345 allows measuring of acceleration data in 3 different axes (X,Y,Z). </p>
+                </div>
+                <!-- /col-md-6 -->
                 <div class="col-md-4">
-                    <div class="thumbnail">
+                    <div class="thumbnail img-responsive">
                         <img src="{{ asset('img/esp-8266.png') }}" width="180px">
-                    </div><!-- /thumbnail -->
-                    <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block">ESP8266</a>
-                    <h5>The ESP8266 WiFi Module is a self contained SOC with integrated TCP/IP protocol stack that can give any microcontroller access to your WiFi network. </h5>
-                </div><!-- /col-md-6 -->
-            </div><!-- /row featurette -->
-        </div><!-- /container -->
-    </div><!-- /white-jumbotron-center -->
-
-    <div class="jumbotron red-jumbotron" data-wow-duration="2s">
+                    </div>
+                    <!-- /thumbnail -->
+                    <a href="https://www.sparkfun.com/products/9836" class="btn btn-lg custom-btn btn-block"><h4>ESP8266</h4></a>
+                    <p>The ESP8266 WiFi Module is a self contained SOC with integrated TCP/IP protocol stack that can give any microcontroller access to your WiFi network. </p>
+                </div>
+                <!-- /col-md-6 -->
+            </div>
+            <!-- /row featurette -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /white-jumbotron-center -->
+    <div class="jumbotron white-jumbotron" id="works-jumbotron" data-wow-duration="2s">
+        <div class="row sectional-heading-line">
+            <div class="sectional-heading text-left">
+                <h3>How It Works</h3>
+            </div>
+        </div>
         <div class="container">
             <div class="row featurette">
-                <h2>HOW IT WORKS</h2>
-                <h5>The gesture device system uses an Arduino Uno coupled with an ADXL345 accelerometer to provide real-time control of devices. It employs the use of WebSockets as a communication protocol over the network. For the server end, it employs the use of WAMP Server (Windows, Apache, MySQL & PHP). For the front-end development, the HTML, CSS and JS provides the backbone of the user interface.</h5>
-            </div><!-- /row featurette -->                
-        </div><!-- /container -->
-    </div><!-- /white-jumbotron-center -->
-
-    <div class="jumbotron black-jumbotron" data-wow-duration="2s">
+                <div class="row featurette">
+                    <!-- <hr></hr> -->
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <img src="{{ asset('img/svg/user.png') }}" width="80px">
+                        </div>
+                        <!-- /thumbnail -->
+                        <h4>Arduino User</h4>
+                    </div>
+                    <!-- /col-md-6 -->
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <img src="{{ asset('img/svg/server.png') }}" width="80px">
+                        </div>
+                        <!-- /thumbnail -->
+                        <h4>Socket Server</h4>
+                    </div>
+                    <!-- /col-md-6 -->
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <img src="{{ asset('img/svg/database.png') }}" width="80px">
+                        </div>
+                        <!-- /thumbnail -->
+                        <h4>Database</h4>
+                    </div>
+                    <!-- /col-md-6 -->
+                </div>
+                <p>A Socket Server facilitates the synchronization and transmission of the data sent from the Arduino device, issuing commands when necessary to provide the system with the appropriate data. The backend logic is able to parse the data sent and intepret it according to the gestures which has been calibrated by the user. It also gives the user complete access to their own calibration data, by adding, deleting and defining gestures which they intend it to be able to intepret. </p>
+            </div>
+            <!-- /row featurette -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /white-jumbotron-center -->
+    <div class="jumbotron" data-wow-duration="2s" id="contribute-jumbotron">
         <div class="container">
             <div class="col-md-6">
-                <button class="btn btn-lg custom-btn btn-block">Follow This Project</button>
-                <h5>Get weekly updates on how this project is progressing through email updates. We strive to provide details on issues,technical approaches and research that we have done to meet our weekly goals and objectives</h5>
-            </div><!-- /row featurette -->                
+                <a href="https://github.com/ploh007/design-project">
+                    <button class="btn btn-lg custom-btn2 btn-block">
+                        <h3>Follow This Project</h3></button>
+                </a>
+                <p>Get weekly updates on how this project is progressing through email updates. We strive to provide details on issues,technical approaches and research that we have done to meet our weekly goals and objectives</p>
+            </div>
+            <!-- /row featurette -->
             <div class="col-md-6">
-                <button class="btn btn-lg custom-btn btn-block">Contribute To This Project</button>
-                <h5>Fork our project on Gitub and get your hands into the nitty gritty of the codebase. See a bug? See a way to optimize and increase the performance of the system? Let us know and we‘d love to work with you! </h5>
-            </div><!-- /row featurette -->                
-        </div><!-- /container -->
-    </div><!-- /white-jumbotron-center -->
-
+                <a href="https://github.com/ploh007/design-project">
+                    <button class="btn btn-lg custom-btn2 btn-block">
+                        <h3>Contribute To This Project</h3></button>
+                </a>
+                <p>Fork our project on Gitub and get your hands into the nitty gritty of the codebase. See a bug? See a way to optimize and increase the performance of the system? Let us know and we‘d love to work with you! </p>
+            </div>
+            <!-- /row featurette -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /white-jumbotron-center -->
 </body>
+<script src="{{ asset('js/home.js') }}"></script>
 @endsection

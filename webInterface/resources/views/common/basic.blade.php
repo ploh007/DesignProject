@@ -15,6 +15,7 @@
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/d3.min.js') }}"></script>
     <script src="{{ asset('js/wow.js') }}"></script>
+    <script src="{{ asset('js/jquery.scrollTo.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
 </head>
 
@@ -78,8 +79,8 @@
 <div id="loading"></div>
 
 <footer>
-    <div> CEG 4912/4913 © 2016. Jordan Hatcher || Paul Loh </div>
-    <div id="scroll-top">Go To Top</div>
+    <div> CEG 4192/4193 © 2017. Jordan Hatcher || Paul Loh </div>
+    <!-- <buton class="btn btn-sm custom-btn" id="scroll-top">Go To Top</button> -->
 </footer>
 
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal">

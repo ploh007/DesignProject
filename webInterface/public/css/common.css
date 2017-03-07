@@ -13,7 +13,7 @@
 body {
     font-family: 'Montserrat', sans-serif;
     padding-top: 50px;
-    font-size: 1.2em;
+    font-size: 1.5em;
     font-weight: normal;
     overflow-x: hidden;
 }
@@ -33,6 +33,8 @@ body {
  */
 
 footer {
+/*    background-color: #000;
+    color:#fff;*/
     text-align: center;
     padding: 30px;
 }
@@ -73,6 +75,11 @@ table {
 .jumbotron {
     margin: 0px;
     text-align: center;
+}
+
+.jumbotron p {
+    padding: 20px;
+    font-size: 1.2em;
 }
 
 .sub-header {
@@ -212,6 +219,46 @@ table {
     border-color: #fff;
 }
 
+.custom-btn2 {
+    position: relative;
+    margin: 0 auto;
+    padding: 5px;
+    color: #fff;
+    border: 2px #fff solid;
+    border-radius: 0px;
+    overflow: hidden;
+    background: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    z-index: 1;
+    transition: 0.08s ease-in;
+    -o-transition: 0.08s ease-in;
+    -ms-transition: 0.08s ease-in;
+    -moz-transition: 0.08s ease-in;
+    -webkit-transition: 0.08s ease-in;
+}
+
+.custom-btn2:hover {
+    color: #000;
+    border-color: #fff;
+}
+
+.custom-btn2:before {
+    content: "";
+    position: absolute;
+    background: #fff;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: -1;
+    -webkit-transition: bottom 0.1s ease-in;
+}
+
+.custom-btn2:hover:before {
+    bottom: 0;
+}
+
 
 /*
  * Custom  Classes for displaying arduino status
@@ -264,6 +311,10 @@ table {
     width: 100%;
     z-index: 9999;
     display:none;
+}
+
+#scroll-top {
+    margin: 10px;
 }
 
 /* 

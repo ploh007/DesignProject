@@ -1,4 +1,3 @@
-
 new WOW().init();
 
 // WOW Scroll Reveal Animation class attachments
@@ -8,3 +7,11 @@ new WOW().init();
 
 $(".arduino-status").addClass("wow fadeInRight");
 
+$(document).ready(function() {
+
+$('#scroll-top').on('click', function() {
+    $('html,body').scrollTo(0, 1000);
+    console.log("HELLO");
+});
+
+});

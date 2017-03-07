@@ -50,7 +50,7 @@
                                 </div><!-- /form-group -->
                                 <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
-                                        <button type="submit" class="btn custom-btn">Login</button>
+                                        <button type="submit" class="btn btn-default">Login</button>
                                         <a class="btn btn-default" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
                                     </div><!-- /col-md-8 col-md-offset-4 -->
                                 </div><!-- /form-group -->
